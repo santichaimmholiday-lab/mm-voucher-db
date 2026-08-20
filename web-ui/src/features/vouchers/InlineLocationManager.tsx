@@ -24,7 +24,7 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
 
   useEffect(() => {
     // Fetch locatypes to get the correct ID for this typeCode
-    fetch('/api/master-locatypes', { headers: { 'Authorization': 'Bearer 123' }})
+    fetch('/api/master-locatypes', { headers: {  }})
       .then(res => res.json())
       .then(data => {
         const type = data.find((t: any) => t.locatype_code === typeCode);
@@ -46,7 +46,7 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
     try {
       const res = await fetch('/api/master-locations', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer 123' },
+        headers: { 'Content-Type': 'application/json',  },
         body: JSON.stringify({
           location_code: newCode,
           location_name: newName,
@@ -73,7 +73,7 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
     try {
       const res = await fetch(`/api/master-locations/${loc.id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': 'Bearer 123' }
+        headers: {  }
       });
       if (!res.ok) throw new Error('Failed to delete location');
       
@@ -97,7 +97,7 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
     try {
       const res = await fetch(`/api/master-locations/${loc.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer 123' },
+        headers: { 'Content-Type': 'application/json',  },
         body: JSON.stringify({
           location_name: newLocName,
           location_address: newLocAddr

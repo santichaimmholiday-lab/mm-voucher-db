@@ -38,7 +38,7 @@ export const MasterLocationList: React.FC = () => {
   const fetchLocations = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/master-locations', { headers: { 'Authorization': 'Bearer 123' }});
+      const res = await fetch('/api/master-locations', { headers: {  }});
       if (!res.ok) throw new Error('Failed to fetch locations');
       setLocations(await res.json());
     } catch (err: any) {
@@ -77,7 +77,7 @@ export const MasterLocationList: React.FC = () => {
       setLoading(true);
       const res = await fetch(`/api/master-locations/${id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': 'Bearer 123' }
+        headers: {  }
       });
       if (!res.ok) throw new Error('Delete failed');
       setLocations(prev => prev.filter(l => l.id !== id));
@@ -120,7 +120,7 @@ export const MasterLocationList: React.FC = () => {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer 123'
+                    
                   },
                   body: JSON.stringify(data)
                 });

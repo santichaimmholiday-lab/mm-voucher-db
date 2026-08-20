@@ -16,7 +16,7 @@ export const SettingsPage: React.FC = () => {
   const fetchSettings = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/settings', { headers: { 'Authorization': 'Bearer 123' }});
+      const res = await fetch('/api/settings', { headers: {  }});
       if (res.ok) {
         const data = await res.json();
         setSettings(data);
@@ -34,7 +34,7 @@ export const SettingsPage: React.FC = () => {
     try {
       const res = await fetch('/api/settings', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer 123' },
+        headers: { 'Content-Type': 'application/json',  },
         body: JSON.stringify(settings)
       });
       if (!res.ok) throw new Error('Failed to save');
@@ -57,7 +57,7 @@ export const SettingsPage: React.FC = () => {
     try {
       const res = await fetch('/api/settings/upload', {
         method: 'POST',
-        headers: { 'Authorization': 'Bearer 123' },
+        headers: {  },
         body: formData
       });
       if (!res.ok) throw new Error('Upload failed');

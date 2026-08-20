@@ -10,6 +10,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
+const core_1 = require("@nestjs/core");
 const prisma_module_1 = require("./prisma/prisma.module");
 const master_locatypes_module_1 = require("./master-locatypes/master-locatypes.module");
 const master_locations_controller_1 = require("./master-locations/master-locations.controller");
@@ -21,6 +22,7 @@ const vouchers_service_1 = require("./vouchers/vouchers.service");
 const auth_controller_1 = require("./auth/auth.controller");
 const auth_service_1 = require("./auth/auth.service");
 const settings_module_1 = require("./settings/settings.module");
+const jwt_auth_guard_1 = require("./auth/guards/jwt-auth.guard");
 const jwt_1 = require("@nestjs/jwt");
 let AppModule = class AppModule {
 };
@@ -51,7 +53,11 @@ exports.AppModule = AppModule = __decorate([
             master_locations_service_1.MasterLocationsService,
             customers_service_1.CustomersService,
             vouchers_service_1.VouchersService,
-            auth_service_1.AuthService
+            auth_service_1.AuthService,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: jwt_auth_guard_1.JwtAuthGuard,
+            }
         ],
     })
 ], AppModule);

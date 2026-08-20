@@ -34,7 +34,7 @@ export const MasterLocationForm: React.FC<Props> = ({ initialData, onSubmit, isL
 
   const fetchLocatypes = async () => {
     try {
-      const res = await fetch('/api/master-locatypes', { headers: { 'Authorization': 'Bearer 123' }});
+      const res = await fetch('/api/master-locatypes', { headers: {  }});
       if (res.ok) setLocatypes(await res.json());
     } catch (e) {
       console.error('Failed to fetch locatypes', e);
@@ -46,7 +46,7 @@ export const MasterLocationForm: React.FC<Props> = ({ initialData, onSubmit, isL
     try {
       const res = await fetch('/api/master-locatypes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer 123' },
+        headers: { 'Content-Type': 'application/json',  },
         body: JSON.stringify({ locatype_code: newTypeName.toUpperCase().replace(/\s+/g, '_'), locatype_name: newTypeName })
       });
       if (res.ok) {
@@ -63,7 +63,7 @@ export const MasterLocationForm: React.FC<Props> = ({ initialData, onSubmit, isL
   const handleDeleteType = async (id: string) => {
     if (window.confirm('Delete this location type?')) {
       try {
-        const res = await fetch(`/api/master-locatypes/${id}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer 123' }});
+        const res = await fetch(`/api/master-locatypes/${id}`, { method: 'DELETE', headers: {  }});
         if (res.ok) {
           fetchLocatypes();
           if (watch('location_locatype') === id) setValue('location_locatype', '');

@@ -38,7 +38,7 @@ export const CustomerList: React.FC = () => {
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/customers', { headers: { 'Authorization': 'Bearer 123' }});
+      const res = await fetch('/api/customers', { headers: {  }});
       if (!res.ok) throw new Error('Failed to fetch customers');
       setCustomers(await res.json());
     } catch (err: any) {
@@ -81,7 +81,7 @@ export const CustomerList: React.FC = () => {
       setLoading(true);
       const res = await fetch(`/api/customers/${id}`, { 
         method: 'DELETE', 
-        headers: { 'Authorization': 'Bearer 123' }
+        headers: {  }
       });
       if (!res.ok) throw new Error('Delete failed');
       setCustomers(prev => prev.filter(c => c.id !== id));
@@ -121,7 +121,7 @@ export const CustomerList: React.FC = () => {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer 123'
+                    
                   },
                   body: JSON.stringify(data)
                 });

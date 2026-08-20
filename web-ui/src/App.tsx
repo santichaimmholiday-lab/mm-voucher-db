@@ -1,6 +1,7 @@
+// App.tsx updates
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link } from 'react-router-dom';
-import { LogOut, UserCircle } from 'lucide-react';
+import { LogOut, UserCircle, KeyRound } from 'lucide-react';
 import { LoginPage } from './features/auth/LoginPage';
 import { PermissionsDashboard } from './features/auth/PermissionsDashboard';
 import { MasterLocationList } from './features/master-locations/MasterLocationList';
@@ -9,23 +10,59 @@ import { VoucherList } from './features/vouchers/VoucherList';
 import { SettingsPage } from './features/settings/SettingsPage';
 import { MockPdfPreview } from './features/vouchers/MockPdfPreview';
 
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const [user, setUser] = useState<{ email: string; role: string; username?: string } | null>(null);
+  const [showReLogin, setShowReLogin] = useState(false);
+  const [reLoginPassword, setReLoginPassword] = useState('');
+  const [reLoginLoading, setReLoginLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payloadBase64 = token.split('.')[1];
-        const payload = JSON.parse(atob(payloadBase64));
-        setUser({ email: payload.email, role: payload.role, username: payload.email.split('@')[0] });
-      } catch (e) {
-        console.error('Failed to parse token', e);
+    const parseToken = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const payloadBase64 = token.split('.')[1];
+          const payload = JSON.parse(atob(payloadBase64));
+          setUser({ email: payload.email, role: payload.role, username: payload.email.split('@')[0] });
+        } catch (e) {
+          console.error('Failed to parse token', e);
+        }
       }
-    }
+    };
+    parseToken();
+
+    const handleSessionExpired = () => {
+      setShowReLogin(true);
+    };
+
+    window.addEventListener('session-expired', handleSessionExpired);
+    return () => window.removeEventListener('session-expired', handleSessionExpired);
   }, []);
+
+  const handleReLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    try {
+      setReLoginLoading(true);
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, password: reLoginPassword })
+      });
+      if (!res.ok) throw new Error('Invalid password');
+      const data = await res.json();
+      localStorage.setItem('token', data.access_token);
+      setShowReLogin(false);
+      setReLoginPassword('');
+      toast.success('Session restored!');
+    } catch (err: any) {
+      toast.error(err.message || 'Login failed');
+    } finally {
+      setReLoginLoading(false);
+    }
+  };
 
   const getNavClass = ({ isActive }: { isActive: boolean }) => 
     isActive 
@@ -35,6 +72,55 @@ function App() {
   return (
     <Router>
       <Toaster position="top-right" />
+      {/* Session Expired Modal */}
+      {showReLogin && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center backdrop-blur-sm">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 border border-gray-200">
+            <div className="flex items-center space-x-3 text-amber-600 mb-4">
+              <KeyRound className="w-8 h-8" />
+              <h3 className="text-lg font-bold text-gray-900">Session Expired</h3>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              For your security, your session has expired. Please enter your password to continue working without losing your data.
+            </p>
+            <form onSubmit={handleReLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Password for {user?.email}</label>
+                <input
+                  type="password"
+                  required
+                  value={reLoginPassword}
+                  onChange={e => setReLoginPassword(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter password..."
+                />
+              </div>
+              <div className="flex space-x-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowReLogin(false);
+                    localStorage.removeItem('token');
+                    setUser(null);
+                    window.location.href = '/';
+                  }}
+                  className="flex-1 px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                >
+                  Sign Out
+                </button>
+                <button
+                  type="submit"
+                  disabled={reLoginLoading}
+                  className="flex-1 px-4 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50"
+                >
+                  {reLoginLoading ? 'Verifying...' : 'Continue'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="min-h-screen bg-gray-50 flex flex-col">
         {/* Navigation Bar */}
         <nav className="bg-blue-800 text-white shadow-lg">

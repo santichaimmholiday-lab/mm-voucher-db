@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { MasterLocatypesModule } from './master-locatypes/master-locatypes.module';
 
@@ -16,6 +17,7 @@ import { VouchersService } from './vouchers/vouchers.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { SettingsModule } from './settings/settings.module';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 import { JwtModule } from '@nestjs/jwt';
 
@@ -44,7 +46,11 @@ import { JwtModule } from '@nestjs/jwt';
     MasterLocationsService,
     CustomersService,
     VouchersService,
-    AuthService
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    }
   ],
 })
 export class AppModule {}

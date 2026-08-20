@@ -26,7 +26,7 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, onSubmit, onCancel }) 
   });
 
   const fetchLocations = () => {
-    fetch('/api/master-locations', { headers: { 'Authorization': 'Bearer 123' }})
+    fetch('/api/master-locations', { headers: {  }})
       .then(r => r.json())
       .then(data => setLocations(data || []))
       .catch(() => toast.error('Failed to load master locations'));

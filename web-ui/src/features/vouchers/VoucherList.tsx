@@ -52,7 +52,7 @@ export const VoucherList: React.FC = () => {
       }
 
       const res = await fetch(`/api/vouchers?${params.toString()}`, { 
-        headers: { 'Authorization': 'Bearer 123' }
+        headers: {  }
       });
       
       if (!res.ok) throw new Error('Failed to fetch vouchers');
@@ -85,7 +85,7 @@ export const VoucherList: React.FC = () => {
       setLoading(true);
       const res = await fetch(`/api/vouchers/${id}`, { 
         method: 'DELETE', 
-        headers: { 'Authorization': 'Bearer 123' }
+        headers: {  }
       });
       if (!res.ok) throw new Error('Delete failed');
       setVouchers(prev => prev.filter(v => v.id !== id));
@@ -131,7 +131,7 @@ export const VoucherList: React.FC = () => {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer 123'
+                    
                   },
                   body: JSON.stringify(data)
                 });
