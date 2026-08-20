@@ -28,7 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.register({
       global: true,
       secret: 'SECRET_KEY_FOR_DEV',
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '4h' },
     }),
     PrismaModule, 
     MasterLocatypesModule, 

@@ -35,7 +35,7 @@ exports.AppModule = AppModule = __decorate([
             jwt_1.JwtModule.register({
                 global: true,
                 secret: 'SECRET_KEY_FOR_DEV',
-                signOptions: { expiresIn: '1d' },
+                signOptions: { expiresIn: '4h' },
             }),
             prisma_module_1.PrismaModule,
             master_locatypes_module_1.MasterLocatypesModule,
