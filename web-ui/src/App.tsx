@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link } from 'react-router-dom';
 import { LogOut, UserCircle, KeyRound } from 'lucide-react';
 import { LoginPage } from './features/auth/LoginPage';
+// App.tsx routing and navbar updates
+import { Dashboard } from './features/dashboard/Dashboard';
 import { PermissionsDashboard } from './features/auth/PermissionsDashboard';
 import { MasterLocationList } from './features/master-locations/MasterLocationList';
 import { CustomerList } from './features/customers/CustomerList';
@@ -132,6 +134,7 @@ function App() {
                   {!user && <NavLink to="/" end className={getNavClass}>Login</NavLink>}
                   {user && (
                     <>
+                      <NavLink to="/dashboard" className={getNavClass}>Dashboard</NavLink>
                       <NavLink to="/permissions" className={getNavClass}>Permissions</NavLink>
                       <NavLink to="/master-locations" className={getNavClass}>Locations</NavLink>
                       <NavLink to="/customers" className={getNavClass}>Customers</NavLink>
@@ -168,6 +171,7 @@ function App() {
         <main className="flex-1 w-full max-w-7xl mx-auto py-6">
           <Routes>
             <Route path="/" element={<LoginPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/permissions" element={<PermissionsDashboard />} />
             <Route path="/master-locations" element={<MasterLocationList />} />
             <Route path="/customers" element={<CustomerList />} />

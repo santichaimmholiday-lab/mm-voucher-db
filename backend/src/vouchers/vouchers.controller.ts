@@ -6,6 +6,11 @@ import type { Response } from 'express';
 export class VouchersController {
   constructor(private readonly vouchersService: VouchersService) {}
 
+  @Get('dashboard-stats')
+  getDashboardStats() {
+    return this.vouchersService.getDashboardStats();
+  }
+
   @Post()
   create(@Body() createDto: any, @Req() req: any) {
     return this.vouchersService.create(createDto, 'user123');

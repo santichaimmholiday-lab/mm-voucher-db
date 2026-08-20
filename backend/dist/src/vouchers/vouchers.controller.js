@@ -20,6 +20,9 @@ let VouchersController = class VouchersController {
     constructor(vouchersService) {
         this.vouchersService = vouchersService;
     }
+    getDashboardStats() {
+        return this.vouchersService.getDashboardStats();
+    }
     create(createDto, req) {
         return this.vouchersService.create(createDto, 'user123');
     }
@@ -48,6 +51,12 @@ let VouchersController = class VouchersController {
     }
 };
 exports.VouchersController = VouchersController;
+__decorate([
+    (0, common_1.Get)('dashboard-stats'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], VouchersController.prototype, "getDashboardStats", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

@@ -32,7 +32,7 @@ export const LoginPage: React.FC = () => {
       }
       const responseData = await res.json();
       localStorage.setItem('token', responseData.access_token);
-      window.location.href = '/vouchers';
+      window.location.href = '/dashboard';
     } catch (err: any) {
       toast.error('System Error: ' + (err.message || 'Invalid username')); 
       setError(err.message || 'Invalid username or password');

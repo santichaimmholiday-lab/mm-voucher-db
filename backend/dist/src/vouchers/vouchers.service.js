@@ -56,6 +56,33 @@ let VouchersService = class VouchersService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async getDashboardStats() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const [totalVouchers, waitingVouchers, todayVouchers, totalCustomers, recentVouchers] = await Promise.all([
+            this.prisma.tb_voucher.count({ where: { is_deleted: false } }),
+            this.prisma.tb_voucher.count({ where: { is_deleted: false, voucher_status: 'Waiting' } }),
+            this.prisma.tb_voucher.count({ where: { is_deleted: false, created_at: { gte: today } } }),
+            this.prisma.tb_customer.count({ where: { is_deleted: false } }),
+            this.prisma.tb_voucher.findMany({
+                where: { is_deleted: false },
+                orderBy: { created_at: 'desc' },
+                take: 5,
+                include: {
+                    hotel: true,
+                    tour: true,
+                    attraction: true
+                }
+            })
+        ]);
+        return {
+            totalVouchers,
+            waitingVouchers,
+            todayVouchers,
+            totalCustomers,
+            recentVouchers
+        };
+    }
     async generateVoucherNumber(issueDate) {
         const year = issueDate.substring(2, 4);
         const month = issueDate.substring(5, 7);

@@ -8,6 +8,36 @@ import { generateVoucherHtml } from './voucher-pdf.template';
 export class VouchersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getDashboardStats() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [totalVouchers, waitingVouchers, todayVouchers, totalCustomers, recentVouchers] = await Promise.all([
+      this.prisma.tb_voucher.count({ where: { is_deleted: false } }),
+      this.prisma.tb_voucher.count({ where: { is_deleted: false, voucher_status: 'Waiting' } }),
+      this.prisma.tb_voucher.count({ where: { is_deleted: false, created_at: { gte: today } } }),
+      this.prisma.tb_customer.count({ where: { is_deleted: false } }),
+      this.prisma.tb_voucher.findMany({
+        where: { is_deleted: false },
+        orderBy: { created_at: 'desc' },
+        take: 5,
+        include: {
+          hotel: true,
+          tour: true,
+          attraction: true
+        }
+      })
+    ]);
+
+    return {
+      totalVouchers,
+      waitingVouchers,
+      todayVouchers,
+      totalCustomers,
+      recentVouchers
+    };
+  }
+
   private async generateVoucherNumber(issueDate: string): Promise<string> {
     const year = issueDate.substring(2, 4); // "YY"
     const month = issueDate.substring(5, 7); // "MM"
