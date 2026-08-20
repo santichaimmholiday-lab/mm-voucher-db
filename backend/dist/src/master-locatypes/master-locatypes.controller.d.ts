@@ -1,0 +1,86 @@
+import { MasterLocatypesService } from './master-locatypes.service';
+import { CreateMasterLocatypeDto, UpdateMasterLocatypeDto } from './dto/create-master-locatype.dto';
+export declare class MasterLocatypesController {
+    private readonly masterLocatypesService;
+    constructor(masterLocatypesService: MasterLocatypesService);
+    create(createDto: CreateMasterLocatypeDto, req: any): Promise<{
+        id: string;
+        locatype_code: string;
+        locatype_name: string;
+        locatype_desc: string | null;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+    }>;
+    findAll(): Promise<{
+        id: string;
+        locatype_code: string;
+        locatype_name: string;
+        locatype_desc: string | null;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+    }[]>;
+    findOne(id: string): Promise<{
+        id: string;
+        locatype_code: string;
+        locatype_name: string;
+        locatype_desc: string | null;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+    }>;
+    update(id: string, updateDto: UpdateMasterLocatypeDto, req: any): Promise<{
+        id: string;
+        locatype_code: string;
+        locatype_name: string;
+        locatype_desc: string | null;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+    }>;
+    remove(id: string, req: any): Promise<{
+        id: string;
+        locatype_code: string;
+        locatype_name: string;
+        locatype_desc: string | null;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+    }>;
+}
