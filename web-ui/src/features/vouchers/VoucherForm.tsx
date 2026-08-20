@@ -92,6 +92,33 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       
+      {/* 0. Document Status */}
+      <div className="bg-white p-4 rounded border border-gray-200 shadow-sm flex items-center justify-between">
+        <div>
+          <h4 className="font-bold text-gray-800">Voucher Status</h4>
+          <p className="text-xs text-gray-500 mt-1">
+            <strong>Waiting:</strong> Default when created.<br/>
+            <strong>Confirmed:</strong> Ready for guest (e.g., Hotel confirmed).<br/>
+            <strong>Cancelled:</strong> Voided/Refunded.
+          </p>
+        </div>
+        <div className="w-48">
+          <select
+            value={formData.voucher_status || 'Waiting'}
+            onChange={e => handleChange('voucher_status', e.target.value)}
+            className={`w-full p-2 border rounded font-bold ${
+              formData.voucher_status === 'Confirmed' ? 'bg-green-50 text-green-700 border-green-300' :
+              formData.voucher_status === 'Cancelled' ? 'bg-red-50 text-red-700 border-red-300' :
+              'bg-yellow-50 text-yellow-700 border-yellow-300'
+            }`}
+          >
+            <option value="Waiting">Waiting</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
       {/* 1. Guest Details */}
       <div className="bg-blue-50 p-4 rounded border border-blue-100">
         <h4 className="font-bold text-blue-900 mb-4">1. Guest Information</h4>
