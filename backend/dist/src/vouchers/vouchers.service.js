@@ -248,7 +248,8 @@ let VouchersService = class VouchersService {
     async generatePdf(id) {
         const voucher = await this.findOne(id);
         const settings = await this.prisma.tb_system_settings.findFirst() || {};
-        const publicUrl = `http://localhost:5173/api/vouchers/${id}/pdf`;
+        const baseUrl = process.env.FRONTEND_URL || 'https://mm-voucher-delta.vercel.app';
+        const publicUrl = `${baseUrl}/api/vouchers/${id}/pdf`;
         const qrCodeBase64 = await QRCode.toDataURL(publicUrl, { margin: 1 });
         const htmlContent = (0, voucher_pdf_template_1.generateVoucherHtml)(voucher, settings, qrCodeBase64);
         const options = { format: 'A4', printBackground: true };

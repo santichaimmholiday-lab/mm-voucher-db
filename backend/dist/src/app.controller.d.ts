@@ -1,6 +1,11 @@
-import { AppService } from './app.service';
+import { PrismaService } from './prisma/prisma.service';
 export declare class AppController {
-    private readonly appService;
-    constructor(appService: AppService);
-    getHello(): string;
+    private readonly prisma;
+    constructor(prisma: PrismaService);
+    checkHealth(): Promise<{
+        status: string;
+        timestamp: Date;
+        db_awake: boolean;
+        user_count: number;
+    }>;
 }

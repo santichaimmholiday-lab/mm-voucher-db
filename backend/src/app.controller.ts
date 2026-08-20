@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { PrismaService } from './prisma/prisma.service';
 
-@Controller()
+@Controller('api/health')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async checkHealth() {
+    // Query DB to keep Supabase awake
+    const count = await this.prisma.tb_user.count();
+    return { status: 'OK', timestamp: new Date(), db_awake: true, user_count: count };
   }
 }

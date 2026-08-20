@@ -10,8 +10,8 @@ export declare class VouchersController {
         totalCustomers: number;
         recentVouchers: ({
             hotel: {
-                is_deleted: boolean;
                 id: string;
+                is_deleted: boolean;
                 created_by: string | null;
                 created_ip: string | null;
                 created_at: Date;
@@ -27,8 +27,8 @@ export declare class VouchersController {
                 location_locatype: string | null;
             } | null;
             attraction: {
-                is_deleted: boolean;
                 id: string;
+                is_deleted: boolean;
                 created_by: string | null;
                 created_ip: string | null;
                 created_at: Date;
@@ -44,8 +44,8 @@ export declare class VouchersController {
                 location_locatype: string | null;
             } | null;
             tour: {
-                is_deleted: boolean;
                 id: string;
+                is_deleted: boolean;
                 created_by: string | null;
                 created_ip: string | null;
                 created_at: Date;
@@ -61,9 +61,18 @@ export declare class VouchersController {
                 location_locatype: string | null;
             } | null;
         } & {
-            is_deleted: boolean;
-            voucher_status: string;
             id: string;
+            is_deleted: boolean;
+            created_by: string | null;
+            created_ip: string | null;
+            created_at: Date;
+            updated_by: string | null;
+            updated_ip: string | null;
+            updated_at: Date;
+            deleted_by: string | null;
+            deleted_ip: string | null;
+            deleted_at: Date | null;
+            voucher_status: string;
             voucher_no: string;
             voucher_issue_date: Date;
             voucher_guest_name: string;
@@ -91,21 +100,21 @@ export declare class VouchersController {
             payment_by: string | null;
             remarks: string | null;
             conf_by: string | null;
-            created_by: string | null;
-            created_ip: string | null;
-            created_at: Date;
-            updated_by: string | null;
-            updated_ip: string | null;
-            updated_at: Date;
-            deleted_by: string | null;
-            deleted_ip: string | null;
-            deleted_at: Date | null;
         })[];
     }>;
     create(createDto: any, req: any): Promise<{
-        is_deleted: boolean;
-        voucher_status: string;
         id: string;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+        voucher_status: string;
         voucher_no: string;
         voucher_issue_date: Date;
         voucher_guest_name: string;
@@ -133,21 +142,12 @@ export declare class VouchersController {
         payment_by: string | null;
         remarks: string | null;
         conf_by: string | null;
-        created_by: string | null;
-        created_ip: string | null;
-        created_at: Date;
-        updated_by: string | null;
-        updated_ip: string | null;
-        updated_at: Date;
-        deleted_by: string | null;
-        deleted_ip: string | null;
-        deleted_at: Date | null;
     }>;
     findAll(page?: string, limit?: string, search?: string, advanced?: string): Promise<{
         data: ({
             hotel: {
-                is_deleted: boolean;
                 id: string;
+                is_deleted: boolean;
                 created_by: string | null;
                 created_ip: string | null;
                 created_at: Date;
@@ -163,8 +163,8 @@ export declare class VouchersController {
                 location_locatype: string | null;
             } | null;
             attraction: {
-                is_deleted: boolean;
                 id: string;
+                is_deleted: boolean;
                 created_by: string | null;
                 created_ip: string | null;
                 created_at: Date;
@@ -180,8 +180,8 @@ export declare class VouchersController {
                 location_locatype: string | null;
             } | null;
             tour: {
-                is_deleted: boolean;
                 id: string;
+                is_deleted: boolean;
                 created_by: string | null;
                 created_ip: string | null;
                 created_at: Date;
@@ -197,9 +197,18 @@ export declare class VouchersController {
                 location_locatype: string | null;
             } | null;
         } & {
-            is_deleted: boolean;
-            voucher_status: string;
             id: string;
+            is_deleted: boolean;
+            created_by: string | null;
+            created_ip: string | null;
+            created_at: Date;
+            updated_by: string | null;
+            updated_ip: string | null;
+            updated_at: Date;
+            deleted_by: string | null;
+            deleted_ip: string | null;
+            deleted_at: Date | null;
+            voucher_status: string;
             voucher_no: string;
             voucher_issue_date: Date;
             voucher_guest_name: string;
@@ -227,15 +236,6 @@ export declare class VouchersController {
             payment_by: string | null;
             remarks: string | null;
             conf_by: string | null;
-            created_by: string | null;
-            created_ip: string | null;
-            created_at: Date;
-            updated_by: string | null;
-            updated_ip: string | null;
-            updated_at: Date;
-            deleted_by: string | null;
-            deleted_ip: string | null;
-            deleted_at: Date | null;
         })[];
         total: number;
         page: number;
@@ -243,8 +243,8 @@ export declare class VouchersController {
     }>;
     findOne(id: string): Promise<{
         hotel: {
-            is_deleted: boolean;
             id: string;
+            is_deleted: boolean;
             created_by: string | null;
             created_ip: string | null;
             created_at: Date;
@@ -260,8 +260,8 @@ export declare class VouchersController {
             location_locatype: string | null;
         } | null;
         attraction: {
-            is_deleted: boolean;
             id: string;
+            is_deleted: boolean;
             created_by: string | null;
             created_ip: string | null;
             created_at: Date;
@@ -277,8 +277,8 @@ export declare class VouchersController {
             location_locatype: string | null;
         } | null;
         tour: {
-            is_deleted: boolean;
             id: string;
+            is_deleted: boolean;
             created_by: string | null;
             created_ip: string | null;
             created_at: Date;
@@ -294,8 +294,8 @@ export declare class VouchersController {
             location_locatype: string | null;
         } | null;
         pickup_hotel: {
-            is_deleted: boolean;
             id: string;
+            is_deleted: boolean;
             created_by: string | null;
             created_ip: string | null;
             created_at: Date;
@@ -311,9 +311,18 @@ export declare class VouchersController {
             location_locatype: string | null;
         } | null;
     } & {
-        is_deleted: boolean;
-        voucher_status: string;
         id: string;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+        voucher_status: string;
         voucher_no: string;
         voucher_issue_date: Date;
         voucher_guest_name: string;
@@ -341,20 +350,20 @@ export declare class VouchersController {
         payment_by: string | null;
         remarks: string | null;
         conf_by: string | null;
-        created_by: string | null;
-        created_ip: string | null;
-        created_at: Date;
-        updated_by: string | null;
-        updated_ip: string | null;
-        updated_at: Date;
-        deleted_by: string | null;
-        deleted_ip: string | null;
-        deleted_at: Date | null;
     }>;
     update(id: string, updateDto: any, req: any): Promise<{
-        is_deleted: boolean;
-        voucher_status: string;
         id: string;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+        voucher_status: string;
         voucher_no: string;
         voucher_issue_date: Date;
         voucher_guest_name: string;
@@ -382,20 +391,20 @@ export declare class VouchersController {
         payment_by: string | null;
         remarks: string | null;
         conf_by: string | null;
-        created_by: string | null;
-        created_ip: string | null;
-        created_at: Date;
-        updated_by: string | null;
-        updated_ip: string | null;
-        updated_at: Date;
-        deleted_by: string | null;
-        deleted_ip: string | null;
-        deleted_at: Date | null;
     }>;
     remove(id: string, req: any): Promise<{
-        is_deleted: boolean;
-        voucher_status: string;
         id: string;
+        is_deleted: boolean;
+        created_by: string | null;
+        created_ip: string | null;
+        created_at: Date;
+        updated_by: string | null;
+        updated_ip: string | null;
+        updated_at: Date;
+        deleted_by: string | null;
+        deleted_ip: string | null;
+        deleted_at: Date | null;
+        voucher_status: string;
         voucher_no: string;
         voucher_issue_date: Date;
         voucher_guest_name: string;
@@ -423,15 +432,6 @@ export declare class VouchersController {
         payment_by: string | null;
         remarks: string | null;
         conf_by: string | null;
-        created_by: string | null;
-        created_ip: string | null;
-        created_at: Date;
-        updated_by: string | null;
-        updated_ip: string | null;
-        updated_at: Date;
-        deleted_by: string | null;
-        deleted_ip: string | null;
-        deleted_at: Date | null;
     }>;
     generatePdf(id: string, res: Response): Promise<void>;
 }

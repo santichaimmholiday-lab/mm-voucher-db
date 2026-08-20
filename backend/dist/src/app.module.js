@@ -23,6 +23,7 @@ const auth_controller_1 = require("./auth/auth.controller");
 const auth_service_1 = require("./auth/auth.service");
 const settings_module_1 = require("./settings/settings.module");
 const jwt_auth_guard_1 = require("./auth/guards/jwt-auth.guard");
+const app_controller_1 = require("./app.controller");
 const jwt_1 = require("@nestjs/jwt");
 let AppModule = class AppModule {
 };
@@ -47,7 +48,8 @@ exports.AppModule = AppModule = __decorate([
             master_locations_controller_1.MasterLocationsController,
             customers_controller_1.CustomersController,
             vouchers_controller_1.VouchersController,
-            auth_controller_1.AuthController
+            auth_controller_1.AuthController,
+            app_controller_1.AppController
         ],
         providers: [
             master_locations_service_1.MasterLocationsService,

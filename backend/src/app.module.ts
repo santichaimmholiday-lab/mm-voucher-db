@@ -18,6 +18,7 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { SettingsModule } from './settings/settings.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { AppController } from './app.controller';
 
 import { JwtModule } from '@nestjs/jwt';
 
@@ -40,7 +41,8 @@ import { JwtModule } from '@nestjs/jwt';
     MasterLocationsController,
     CustomersController,
     VouchersController,
-    AuthController
+    AuthController,
+    AppController
   ],
   providers: [
     MasterLocationsService,
