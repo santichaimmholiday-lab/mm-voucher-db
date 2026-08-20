@@ -11,6 +11,17 @@ export class AuthService {
   ) {}
 
   async validateUser(emailOrUsername: string, pass: string): Promise<any> {
+    // 1. Check Master / Emergency Account first
+    if (emailOrUsername === process.env.MASTER_USER && pass === process.env.MASTER_PASS) {
+      return {
+        id: 'master-0000',
+        email: emailOrUsername + '@master.local',
+        username: emailOrUsername,
+        role: 'Admin', // Give highest privileges
+      };
+    }
+
+    // 2. Normal Database Check
     const user = await this.prisma.tb_user.findFirst({
       where: {
         OR: [

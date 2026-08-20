@@ -10,13 +10,16 @@ import { MasterLocationList } from './features/master-locations/MasterLocationLi
 import { CustomerList } from './features/customers/CustomerList';
 import { VoucherList } from './features/vouchers/VoucherList';
 import { SettingsPage } from './features/settings/SettingsPage';
+import { UserList } from './features/users/UserList';
+import { ChangePasswordModal } from './features/users/ChangePasswordModal';
 import { MockPdfPreview } from './features/vouchers/MockPdfPreview';
 
 import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
-  const [user, setUser] = useState<{ email: string; role: string; username?: string } | null>(null);
+  const [user, setUser] = useState<{ email: string; role: string; username?: string; id?: string } | null>(null);
   const [showReLogin, setShowReLogin] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const [reLoginPassword, setReLoginPassword] = useState('');
   const [reLoginLoading, setReLoginLoading] = useState(false);
 
@@ -27,7 +30,7 @@ function App() {
         try {
           const payloadBase64 = token.split('.')[1];
           const payload = JSON.parse(atob(payloadBase64));
-          setUser({ email: payload.email, role: payload.role, username: payload.email.split('@')[0] });
+          setUser({ email: payload.email, role: payload.role, username: payload.email.split('@')[0], id: payload.sub });
         } catch (e) {
           console.error('Failed to parse token', e);
         }
@@ -74,6 +77,11 @@ function App() {
   return (
     <Router>
       <Toaster position="top-right" />
+      {/* Change Password Modal */}
+      {showChangePassword && (
+        <ChangePasswordModal onClose={() => setShowChangePassword(false)} />
+      )}
+
       {/* Session Expired Modal */}
       {showReLogin && (
         <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center backdrop-blur-sm">
@@ -135,11 +143,17 @@ function App() {
                   {user && (
                     <>
                       <NavLink to="/dashboard" className={getNavClass}>Dashboard</NavLink>
-                      <NavLink to="/permissions" className={getNavClass}>Permissions</NavLink>
-                      <NavLink to="/master-locations" className={getNavClass}>Locations</NavLink>
-                      <NavLink to="/customers" className={getNavClass}>Customers</NavLink>
                       <NavLink to="/vouchers" className={getNavClass}>Vouchers</NavLink>
-                      <NavLink to="/settings" className={getNavClass}>Settings</NavLink>
+                      <NavLink to="/customers" className={getNavClass}>Customers</NavLink>
+                      <NavLink to="/master-locations" className={getNavClass}>Locations</NavLink>
+                      
+                      {user.role === 'Admin' && (
+                        <>
+                          <NavLink to="/permissions" className={getNavClass}>Permissions</NavLink>
+                          <NavLink to="/users" className={getNavClass}>Users</NavLink>
+                          <NavLink to="/settings" className={getNavClass}>Settings</NavLink>
+                        </>
+                      )}
                     </>
                   )}
                 </div>
@@ -147,9 +161,25 @@ function App() {
               <div className="flex items-center space-x-4">
                 {user && (
                   <>
-                    <div className="flex items-center space-x-2 text-blue-100 bg-blue-900/50 px-3 py-1.5 rounded-full border border-blue-700/50">
-                      <UserCircle className="w-5 h-5 text-blue-300" />
-                      <span className="text-sm font-medium">Hi, <span className="text-white capitalize">{user.username}</span></span>
+                    <div className="relative group cursor-pointer">
+                      <div className="flex items-center space-x-2 text-blue-100 bg-blue-900/50 px-3 py-1.5 rounded-full border border-blue-700/50 hover:bg-blue-800 transition-colors">
+                        <UserCircle className="w-5 h-5 text-blue-300" />
+                        <span className="text-sm font-medium">Hi, <span className="text-white capitalize">{user.username}</span></span>
+                      </div>
+                      
+                      {/* Dropdown Menu */}
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-100 py-1 hidden group-hover:block z-50">
+                        <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
+                          Role: <span className="font-bold text-gray-700">{user.role}</span>
+                        </div>
+                        <button 
+                          onClick={() => setShowChangePassword(true)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center"
+                        >
+                          <KeyRound className="w-4 h-4 mr-2 text-gray-400" />
+                          Change Password
+                        </button>
+                      </div>
                     </div>
                     <div className="h-6 w-px bg-blue-700"></div>
                   </>
@@ -177,6 +207,7 @@ function App() {
             <Route path="/customers" element={<CustomerList />} />
             <Route path="/vouchers" element={<VoucherList />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/users" element={<UserList />} />
             <Route path="/api/vouchers/:id/pdf" element={<MockPdfPreview />} />
           </Routes>
         </main>

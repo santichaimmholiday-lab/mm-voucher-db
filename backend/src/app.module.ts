@@ -19,6 +19,8 @@ import { AuthService } from './auth/auth.service';
 import { SettingsModule } from './settings/settings.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { AppController } from './app.controller';
+import { UsersController } from './users/users.controller';
+import { UsersService } from './users/users.service';
 
 import { JwtModule } from '@nestjs/jwt';
 
@@ -42,13 +44,15 @@ import { JwtModule } from '@nestjs/jwt';
     CustomersController,
     VouchersController,
     AuthController,
-    AppController
+    AppController,
+    UsersController
   ],
   providers: [
     MasterLocationsService,
     CustomersService,
     VouchersService,
     AuthService,
+    UsersService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
