@@ -17,11 +17,18 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { SettingsModule } from './settings/settings.module';
 
+import { JwtModule } from '@nestjs/jwt';
+
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
+    }),
+    JwtModule.register({
+      global: true,
+      secret: 'SECRET_KEY_FOR_DEV',
+      signOptions: { expiresIn: '1d' },
     }),
     PrismaModule, 
     MasterLocatypesModule, 

@@ -22,13 +22,20 @@ export const LoginPage: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      // Simulate API call to POST /api/auth/login
-      console.log('Logging in with', data);
-      await new Promise(r => setTimeout(r, 1000));
-      // On success, save JWT and redirect
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) {
+        throw new Error('Invalid username or password');
+      }
+      const responseData = await res.json();
+      localStorage.setItem('token', responseData.access_token);
       window.location.href = '/vouchers';
     } catch (err: any) {
-      toast.error('System Error: ' + (err.message || 'Invalid username')); setError(err.message || 'Invalid username or password');
+      toast.error('System Error: ' + (err.message || 'Invalid username')); 
+      setError(err.message || 'Invalid username or password');
     } finally {
       setLoading(false);
     }

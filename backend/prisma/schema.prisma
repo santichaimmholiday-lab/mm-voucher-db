@@ -148,3 +148,13 @@ model tb_voucher {
   tour               tb_master_location? @relation("TourRelation", fields: [tour_id], references: [id])
   pickup_hotel       tb_master_location? @relation("PickupHotelRelation", fields: [pickup_hotel_id], references: [id])
 }
+
+model tb_user {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      String   @default("User")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

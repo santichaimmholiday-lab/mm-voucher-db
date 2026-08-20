@@ -21,6 +21,13 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
+    async login(body) {
+        const user = await this.authService.validateUser(body.email, body.password);
+        if (!user) {
+            throw new common_1.UnauthorizedException('Invalid username or password');
+        }
+        return this.authService.login(user);
+    }
     getProfile(req) {
         return req.user;
     }
@@ -29,6 +36,13 @@ let AuthController = class AuthController {
     }
 };
 exports.AuthController = AuthController;
+__decorate([
+    (0, common_1.Post)('login'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.Get)('me'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

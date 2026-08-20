@@ -36,7 +36,7 @@ function App() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <Link to="/" onClick={() => console.log('Logged out')} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium shadow transition-colors">
+                <Link to="/" onClick={() => { localStorage.removeItem('token'); console.log('Logged out'); }} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium shadow transition-colors">
                   Sign Out
                 </Link>
               </div>

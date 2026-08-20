@@ -4,10 +4,10 @@ export declare class MasterLocatypesService {
     private prisma;
     constructor(prisma: PrismaService);
     create(createDto: CreateMasterLocatypeDto, userId: string, ipAddress: string): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -20,10 +20,10 @@ export declare class MasterLocatypesService {
         deleted_at: Date | null;
     }>;
     findAll(): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -36,10 +36,10 @@ export declare class MasterLocatypesService {
         deleted_at: Date | null;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -52,10 +52,10 @@ export declare class MasterLocatypesService {
         deleted_at: Date | null;
     }>;
     update(id: string, updateDto: UpdateMasterLocatypeDto, userId: string, ipAddress: string): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -68,10 +68,10 @@ export declare class MasterLocatypesService {
         deleted_at: Date | null;
     }>;
     remove(id: string, userId: string, ipAddress: string): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;

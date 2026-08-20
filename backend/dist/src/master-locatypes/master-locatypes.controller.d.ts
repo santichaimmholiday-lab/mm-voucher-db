@@ -4,10 +4,10 @@ export declare class MasterLocatypesController {
     private readonly masterLocatypesService;
     constructor(masterLocatypesService: MasterLocatypesService);
     create(createDto: CreateMasterLocatypeDto, req: any): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -20,10 +20,10 @@ export declare class MasterLocatypesController {
         deleted_at: Date | null;
     }>;
     findAll(): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -36,10 +36,10 @@ export declare class MasterLocatypesController {
         deleted_at: Date | null;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -52,10 +52,10 @@ export declare class MasterLocatypesController {
         deleted_at: Date | null;
     }>;
     update(id: string, updateDto: UpdateMasterLocatypeDto, req: any): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;
@@ -68,10 +68,10 @@ export declare class MasterLocatypesController {
         deleted_at: Date | null;
     }>;
     remove(id: string, req: any): Promise<{
-        id: string;
         locatype_code: string;
         locatype_name: string;
         locatype_desc: string | null;
+        id: string;
         is_deleted: boolean;
         created_by: string | null;
         created_ip: string | null;

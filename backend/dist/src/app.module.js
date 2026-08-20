@@ -21,6 +21,7 @@ const vouchers_service_1 = require("./vouchers/vouchers.service");
 const auth_controller_1 = require("./auth/auth.controller");
 const auth_service_1 = require("./auth/auth.service");
 const settings_module_1 = require("./settings/settings.module");
+const jwt_1 = require("@nestjs/jwt");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,6 +31,11 @@ exports.AppModule = AppModule = __decorate([
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(process.cwd(), 'uploads'),
                 serveRoot: '/uploads',
+            }),
+            jwt_1.JwtModule.register({
+                global: true,
+                secret: 'SECRET_KEY_FOR_DEV',
+                signOptions: { expiresIn: '1d' },
             }),
             prisma_module_1.PrismaModule,
             master_locatypes_module_1.MasterLocatypesModule,

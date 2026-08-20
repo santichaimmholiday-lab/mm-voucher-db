@@ -6,6 +6,7 @@ export declare class SettingsController {
     getSettings(): Promise<{}>;
     updateSettings(data: any): Promise<{
         id: string;
+        updated_at: Date;
         company_name: string | null;
         company_name_th: string | null;
         company_address: string | null;
@@ -18,7 +19,6 @@ export declare class SettingsController {
         condition_booking: string | null;
         condition_hotel: string | null;
         condition_tour: string | null;
-        updated_at: Date;
     }>;
     uploadFile(file: Express.Multer.File): Promise<{
         url: any;

@@ -23,10 +23,10 @@ export declare class MasterLocationsController {
     }>;
     findAll(): Promise<({
         locatype: {
-            id: string;
             locatype_code: string;
             locatype_name: string;
             locatype_desc: string | null;
+            id: string;
             is_deleted: boolean;
             created_by: string | null;
             created_ip: string | null;
