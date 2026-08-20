@@ -217,8 +217,9 @@ export class VouchersService {
     const voucher = await this.findOne(id);
     const settings = await this.prisma.tb_system_settings.findFirst() || {};
 
-    // Public URL that the QR code points to (Frontend proxy handles this)
-    const publicUrl = `http://localhost:5173/api/vouchers/${id}/pdf`;
+    // Public URL that the QR code points to
+    const baseUrl = process.env.FRONTEND_URL || 'https://mm-voucher-delta.vercel.app';
+    const publicUrl = `${baseUrl}/api/vouchers/${id}/pdf`;
     const qrCodeBase64 = await QRCode.toDataURL(publicUrl, { margin: 1 });
 
     const htmlContent = generateVoucherHtml(voucher, settings, qrCodeBase64);
