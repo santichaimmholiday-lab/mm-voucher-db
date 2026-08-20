@@ -9,13 +9,13 @@ export class UsersController {
 
   @Get()
   findAll(@Req() req: any) {
-    if (req.user.role !== 'Admin') throw new UnauthorizedException('Admin only');
+    if (req.user.role?.toLowerCase() !== 'admin') throw new UnauthorizedException('Admin only');
     return this.usersService.findAll();
   }
 
   @Post()
   create(@Body() createDto: any, @Req() req: any) {
-    if (req.user.role !== 'Admin') throw new UnauthorizedException('Admin only');
+    if (req.user.role?.toLowerCase() !== 'admin') throw new UnauthorizedException('Admin only');
     return this.usersService.create(createDto);
   }
 
@@ -26,13 +26,13 @@ export class UsersController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDto: any, @Req() req: any) {
-    if (req.user.role !== 'Admin') throw new UnauthorizedException('Admin only');
+    if (req.user.role?.toLowerCase() !== 'admin') throw new UnauthorizedException('Admin only');
     return this.usersService.update(id, updateDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
-    if (req.user.role !== 'Admin') throw new UnauthorizedException('Admin only');
+    if (req.user.role?.toLowerCase() !== 'admin') throw new UnauthorizedException('Admin only');
     return this.usersService.remove(id);
   }
 }
