@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link } from 'react-router-dom';
+import { LogOut, UserCircle } from 'lucide-react';
 import { LoginPage } from './features/auth/LoginPage';
 import { PermissionsDashboard } from './features/auth/PermissionsDashboard';
 import { MasterLocationList } from './features/master-locations/MasterLocationList';
@@ -11,6 +12,21 @@ import { MockPdfPreview } from './features/vouchers/MockPdfPreview';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
+  const [user, setUser] = useState<{ email: string; role: string; username?: string } | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payloadBase64 = token.split('.')[1];
+        const payload = JSON.parse(atob(payloadBase64));
+        setUser({ email: payload.email, role: payload.role, username: payload.email.split('@')[0] });
+      } catch (e) {
+        console.error('Failed to parse token', e);
+      }
+    }
+  }, []);
+
   const getNavClass = ({ isActive }: { isActive: boolean }) => 
     isActive 
       ? "bg-blue-900 text-white px-3 py-2 rounded-md font-bold shadow-inner border border-blue-700"
@@ -27,17 +43,35 @@ function App() {
               <div className="flex items-center space-x-4">
                 <img src="/mm_logo.png" alt="MM Holiday Logo" className="h-10 w-auto bg-white rounded-md p-1" />
                 <div className="hidden md:flex space-x-2">
-                  <NavLink to="/" end className={getNavClass}>Login Demo</NavLink>
-                  <NavLink to="/permissions" className={getNavClass}>Permissions</NavLink>
-                  <NavLink to="/master-locations" className={getNavClass}>Locations</NavLink>
-                  <NavLink to="/customers" className={getNavClass}>Customers</NavLink>
-                  <NavLink to="/vouchers" className={getNavClass}>Vouchers</NavLink>
-                  <NavLink to="/settings" className={getNavClass}>Settings</NavLink>
+                  {!user && <NavLink to="/" end className={getNavClass}>Login</NavLink>}
+                  {user && (
+                    <>
+                      <NavLink to="/permissions" className={getNavClass}>Permissions</NavLink>
+                      <NavLink to="/master-locations" className={getNavClass}>Locations</NavLink>
+                      <NavLink to="/customers" className={getNavClass}>Customers</NavLink>
+                      <NavLink to="/vouchers" className={getNavClass}>Vouchers</NavLink>
+                      <NavLink to="/settings" className={getNavClass}>Settings</NavLink>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <Link to="/" onClick={() => { localStorage.removeItem('token'); console.log('Logged out'); }} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium shadow transition-colors">
-                  Sign Out
+                {user && (
+                  <>
+                    <div className="flex items-center space-x-2 text-blue-100 bg-blue-900/50 px-3 py-1.5 rounded-full border border-blue-700/50">
+                      <UserCircle className="w-5 h-5 text-blue-300" />
+                      <span className="text-sm font-medium">Hi, <span className="text-white capitalize">{user.username}</span></span>
+                    </div>
+                    <div className="h-6 w-px bg-blue-700"></div>
+                  </>
+                )}
+                <Link 
+                  to="/" 
+                  onClick={() => { localStorage.removeItem('token'); setUser(null); }} 
+                  className="flex items-center space-x-2 text-blue-200 hover:text-white px-2 py-2 rounded-md text-sm font-medium transition-colors opacity-80 hover:opacity-100"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
                 </Link>
               </div>
             </div>
