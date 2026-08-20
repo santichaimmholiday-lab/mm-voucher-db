@@ -1,6 +1,7 @@
 import { SettingsService } from './settings.service';
 export declare class SettingsController {
     private readonly settingsService;
+    private supabase;
     constructor(settingsService: SettingsService);
     getSettings(): Promise<{}>;
     updateSettings(data: any): Promise<{
@@ -19,7 +20,7 @@ export declare class SettingsController {
         condition_tour: string | null;
         updated_at: Date;
     }>;
-    uploadFile(file: Express.Multer.File): {
-        url: string;
-    };
+    uploadFile(file: Express.Multer.File): Promise<{
+        url: any;
+    }>;
 }

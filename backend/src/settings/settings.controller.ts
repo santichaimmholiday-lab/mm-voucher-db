@@ -4,9 +4,19 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { SettingsService } from './settings.service';
 
+import { createClient } from '@supabase/supabase-js';
+
 @Controller('api/settings')
 export class SettingsController {
-  constructor(private readonly settingsService: SettingsService) {}
+  private supabase;
+
+  constructor(private readonly settingsService: SettingsService) {
+    // Initialize Supabase client
+    this.supabase = createClient(
+      process.env.SUPABASE_URL || '',
+      process.env.SUPABASE_KEY || ''
+    );
+  }
 
   @Get()
   getSettings() {
@@ -20,12 +30,31 @@ export class SettingsController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new Error('No file uploaded');
-    const base64Image = file.buffer.toString('base64');
-    const dataUri = `data:${file.mimetype};base64,${base64Image}`;
+
+    const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${file.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
+    
+    // Upload to Supabase Bucket named 'uploads'
+    const { data, error } = await this.supabase.storage
+      .from('uploads')
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false,
+      });
+
+    if (error) {
+      console.error('Supabase upload error:', error);
+      throw new Error(`Upload failed: ${error.message}`);
+    }
+
+    // Get public URL
+    const { data: publicUrlData } = this.supabase.storage
+      .from('uploads')
+      .getPublicUrl(fileName);
+
     return {
-      url: dataUri,
+      url: publicUrlData.publicUrl,
     };
   }
 }

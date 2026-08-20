@@ -16,10 +16,13 @@ exports.SettingsController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const settings_service_1 = require("./settings.service");
+const supabase_js_1 = require("@supabase/supabase-js");
 let SettingsController = class SettingsController {
     settingsService;
+    supabase;
     constructor(settingsService) {
         this.settingsService = settingsService;
+        this.supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL || '', process.env.SUPABASE_KEY || '');
     }
     getSettings() {
         return this.settingsService.getSettings();
@@ -27,13 +30,25 @@ let SettingsController = class SettingsController {
     updateSettings(data) {
         return this.settingsService.updateSettings(data);
     }
-    uploadFile(file) {
+    async uploadFile(file) {
         if (!file)
             throw new Error('No file uploaded');
-        const base64Image = file.buffer.toString('base64');
-        const dataUri = `data:${file.mimetype};base64,${base64Image}`;
+        const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${file.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
+        const { data, error } = await this.supabase.storage
+            .from('uploads')
+            .upload(fileName, file.buffer, {
+            contentType: file.mimetype,
+            upsert: false,
+        });
+        if (error) {
+            console.error('Supabase upload error:', error);
+            throw new Error(`Upload failed: ${error.message}`);
+        }
+        const { data: publicUrlData } = this.supabase.storage
+            .from('uploads')
+            .getPublicUrl(fileName);
         return {
-            url: dataUri,
+            url: publicUrlData.publicUrl,
         };
     }
 };
@@ -57,7 +72,7 @@ __decorate([
     __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SettingsController.prototype, "uploadFile", null);
 exports.SettingsController = SettingsController = __decorate([
     (0, common_1.Controller)('api/settings'),

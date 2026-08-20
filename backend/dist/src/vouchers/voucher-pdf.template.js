@@ -12,15 +12,8 @@ const formatDate = (dateStr) => {
 };
 const generateVoucherHtml = (voucher, settings, generatedQrCodeBase64) => {
     const issueDate = formatDate(voucher.voucher_issue_date);
-    const formatImg = (path) => {
-        if (!path)
-            return null;
-        if (path.startsWith('data:'))
-            return path;
-        return `http://localhost:${process.env.PORT || 3000}${path}`;
-    };
-    const finalQrCode = settings.qr_code_path ? formatImg(settings.qr_code_path) : generatedQrCodeBase64;
-    const finalLogo = settings.logo_image_path ? formatImg(settings.logo_image_path) : null;
+    const finalQrCode = settings.qr_code_path || generatedQrCodeBase64;
+    const finalLogo = settings.logo_image_path || null;
     let paxString = [];
     if (voucher.pax_adult > 0)
         paxString.push(`${voucher.pax_adult} Adult`);

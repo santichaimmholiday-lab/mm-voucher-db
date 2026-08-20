@@ -10,16 +10,8 @@ const formatDate = (dateStr: string): string => {
 export const generateVoucherHtml = (voucher: any, settings: any, generatedQrCodeBase64: string): string => {
   const issueDate = formatDate(voucher.voucher_issue_date);
 
-  // Helper to format image URLs (handles base64 or legacy paths)
-  const formatImg = (path: string | null) => {
-    if (!path) return null;
-    if (path.startsWith('data:')) return path;
-    // Fallback for legacy paths (might be broken on Render but keeps local dev working)
-    return `http://localhost:${process.env.PORT || 3000}${path}`;
-  };
-
-  const finalQrCode = settings.qr_code_path ? formatImg(settings.qr_code_path) : generatedQrCodeBase64;
-  const finalLogo = settings.logo_image_path ? formatImg(settings.logo_image_path) : null;
+  const finalQrCode = settings.qr_code_path || generatedQrCodeBase64;
+  const finalLogo = settings.logo_image_path || null;
 
   // Construct Guest PAX
   let paxString: string[] = [];
