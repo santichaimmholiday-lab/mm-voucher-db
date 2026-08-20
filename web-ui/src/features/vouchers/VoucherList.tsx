@@ -21,6 +21,7 @@ export const VoucherList: React.FC = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [editingVoucher, setEditingVoucher] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -120,34 +121,41 @@ export const VoucherList: React.FC = () => {
 
       {showForm ? (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-medium mb-4">Create Voucher</h3>
+          <h3 className="text-lg font-medium mb-4">{editingVoucher ? `Edit Voucher: ${editingVoucher.voucher_no}` : 'Create Voucher'}</h3>
           <VoucherForm 
             isLoading={loading}
-            onCancel={() => setShowForm(false)}
+            initialData={editingVoucher}
+            onCancel={() => {
+              setShowForm(false);
+              setEditingVoucher(null);
+            }}
             onSubmit={async (data) => {
               setLoading(true);
               try {
-                const res = await fetch('/api/vouchers', {
-                  method: 'POST',
+                const url = editingVoucher ? `/api/vouchers/${editingVoucher.id}` : '/api/vouchers';
+                const method = editingVoucher ? 'PATCH' : 'POST';
+                const res = await fetch(url, {
+                  method,
                   headers: {
-                    'Content-Type': 'application/json',
-                    
+                    'Content-Type': 'application/json'
                   },
                   body: JSON.stringify(data)
                 });
+                
                 if (!res.ok) {
                   const errData = await res.json().catch(() => ({}));
-                  throw new Error(errData.message || 'Failed to save voucher');
+                  throw new Error(errData.message || 'Operation failed');
                 }
-                toast.success('Voucher created successfully!');
+                toast.success(editingVoucher ? 'Voucher updated successfully!' : 'Voucher created successfully!');
                 setShowForm(false);
+                setEditingVoucher(null);
                 fetchVouchers();
               } catch (err: any) {
-                toast.error('Backend Error: ' + err.message);
+                toast.error(err.message || 'Operation failed');
               } finally {
                 setLoading(false);
               }
-            }} 
+            }}
           />
         </div>
       ) : (
@@ -224,7 +232,14 @@ export const VoucherList: React.FC = () => {
                           </button>
                         )}
                         {canEdit && (
-                          <button className="inline-flex items-center justify-center px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700 border border-amber-200 rounded-md transition-colors" title="Edit">
+                          <button 
+                            onClick={() => {
+                              setEditingVoucher(v);
+                              setShowForm(true);
+                            }}
+                            className="inline-flex items-center justify-center px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700 border border-amber-200 rounded-md transition-colors" 
+                            title="Edit"
+                          >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>

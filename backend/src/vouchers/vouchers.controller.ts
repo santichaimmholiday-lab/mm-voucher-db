@@ -13,7 +13,8 @@ export class VouchersController {
 
   @Post()
   create(@Body() createDto: any, @Req() req: any) {
-    return this.vouchersService.create(createDto, 'user123');
+    const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
+    return this.vouchersService.create(createDto, username);
   }
 
   @Get()
@@ -35,12 +36,14 @@ export class VouchersController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDto: any, @Req() req: any) {
-    return this.vouchersService.update(id, updateDto, 'user123');
+    const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
+    return this.vouchersService.update(id, updateDto, username);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
-    return this.vouchersService.remove(id, 'user123');
+    const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
+    return this.vouchersService.remove(id, username);
   }
 
   @Get(':id/pdf')

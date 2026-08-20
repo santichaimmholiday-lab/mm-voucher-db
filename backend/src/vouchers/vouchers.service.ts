@@ -186,7 +186,24 @@ export class VouchersService {
   }
 
   async update(id: string, updateDto: any, userId: string) {
-    return { status: 'mock-updated', id };
+    const { hotel, tour, attraction, created_at, updated_at, created_by, updated_by, ...voucherData } = updateDto;
+
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const voucher = await tx.tb_voucher.update({
+          where: { id },
+          data: {
+            ...voucherData,
+            updated_by: userId,
+            updated_at: new Date()
+          }
+        });
+        return voucher;
+      });
+    } catch (error) {
+      console.error('Prisma Transaction Error (Update):', error);
+      throw new InternalServerErrorException('Failed to update voucher');
+    }
   }
 
   async remove(id: string, userId: string) {

@@ -5,14 +5,15 @@ import toast from 'react-hot-toast';
 
 interface Props {
   isLoading: boolean;
+  initialData?: any;
   onSubmit: (data: CreateVoucherPayload) => Promise<void>;
   onCancel: () => void;
 }
 
-export const VoucherForm: React.FC<Props> = ({ isLoading, onSubmit, onCancel }) => {
+export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit, onCancel }) => {
   const [locations, setLocations] = useState<MasterLocation[]>([]);
   
-  const [formData, setFormData] = useState<Partial<CreateVoucherPayload>>({
+  const [formData, setFormData] = useState<Partial<CreateVoucherPayload>>(initialData || {
     voucher_issue_date: new Date().toISOString().substring(0, 10),
     voucher_status: 'Waiting',
     voucher_type: 'HOTEL',
@@ -280,10 +281,28 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, onSubmit, onCancel }) 
         </div>
       </div>
 
-      <div className="flex justify-end space-x-2">
+      {/* 5. Audit Log (History) */}
+      {initialData && (
+        <div className="bg-blue-50 p-4 rounded border border-blue-100 flex justify-between items-center text-sm">
+          <div>
+            <span className="text-gray-500 block text-xs uppercase font-bold tracking-wider">Created By</span>
+            <span className="font-medium text-blue-900">{initialData.created_by || 'System'}</span>
+            <span className="text-gray-500 ml-2">on {new Date(initialData.created_at).toLocaleString('en-GB')}</span>
+          </div>
+          {initialData.updated_by && initialData.updated_at !== initialData.created_at && (
+            <div className="text-right">
+              <span className="text-gray-500 block text-xs uppercase font-bold tracking-wider">Last Edited By</span>
+              <span className="font-medium text-blue-900">{initialData.updated_by}</span>
+              <span className="text-gray-500 ml-2">on {new Date(initialData.updated_at).toLocaleString('en-GB')}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="flex justify-end space-x-2 pt-4">
         <button type="button" onClick={onCancel} className="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
         <button type="submit" disabled={isLoading} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50">
-          {isLoading ? 'Saving...' : 'Create Voucher'}
+          {isLoading ? 'Saving...' : (initialData ? 'Update Voucher' : 'Create Voucher')}
         </button>
       </div>
     </form>

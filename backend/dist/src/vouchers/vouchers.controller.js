@@ -24,7 +24,8 @@ let VouchersController = class VouchersController {
         return this.vouchersService.getDashboardStats();
     }
     create(createDto, req) {
-        return this.vouchersService.create(createDto, 'user123');
+        const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
+        return this.vouchersService.create(createDto, username);
     }
     findAll(page, limit, search, advanced) {
         const pageNum = page ? parseInt(page, 10) : 1;
@@ -35,10 +36,12 @@ let VouchersController = class VouchersController {
         return this.vouchersService.findOne(id);
     }
     update(id, updateDto, req) {
-        return this.vouchersService.update(id, updateDto, 'user123');
+        const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
+        return this.vouchersService.update(id, updateDto, username);
     }
     remove(id, req) {
-        return this.vouchersService.remove(id, 'user123');
+        const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
+        return this.vouchersService.remove(id, username);
     }
     async generatePdf(id, res) {
         const pdfBuffer = await this.vouchersService.generatePdf(id);

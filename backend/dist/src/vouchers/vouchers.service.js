@@ -220,7 +220,24 @@ let VouchersService = class VouchersService {
         return voucher;
     }
     async update(id, updateDto, userId) {
-        return { status: 'mock-updated', id };
+        const { hotel, tour, attraction, created_at, updated_at, created_by, updated_by, ...voucherData } = updateDto;
+        try {
+            return await this.prisma.$transaction(async (tx) => {
+                const voucher = await tx.tb_voucher.update({
+                    where: { id },
+                    data: {
+                        ...voucherData,
+                        updated_by: userId,
+                        updated_at: new Date()
+                    }
+                });
+                return voucher;
+            });
+        }
+        catch (error) {
+            console.error('Prisma Transaction Error (Update):', error);
+            throw new common_1.InternalServerErrorException('Failed to update voucher');
+        }
     }
     async remove(id, userId) {
         return this.prisma.tb_voucher.update({
