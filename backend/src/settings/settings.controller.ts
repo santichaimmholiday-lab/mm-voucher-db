@@ -19,18 +19,13 @@ export class SettingsController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
-      }
-    })
-  }))
+  @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new Error('No file uploaded');
+    const base64Image = file.buffer.toString('base64');
+    const dataUri = `data:${file.mimetype};base64,${base64Image}`;
     return {
-      url: `/uploads/${file.filename}`,
+      url: dataUri,
     };
   }
 }

@@ -15,8 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SettingsController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
-const multer_1 = require("multer");
-const path_1 = require("path");
 const settings_service_1 = require("./settings.service");
 let SettingsController = class SettingsController {
     settingsService;
@@ -30,8 +28,12 @@ let SettingsController = class SettingsController {
         return this.settingsService.updateSettings(data);
     }
     uploadFile(file) {
+        if (!file)
+            throw new Error('No file uploaded');
+        const base64Image = file.buffer.toString('base64');
+        const dataUri = `data:${file.mimetype};base64,${base64Image}`;
         return {
-            url: `/uploads/${file.filename}`,
+            url: dataUri,
         };
     }
 };
@@ -51,15 +53,7 @@ __decorate([
 ], SettingsController.prototype, "updateSettings", null);
 __decorate([
     (0, common_1.Post)('upload'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
-        storage: (0, multer_1.diskStorage)({
-            destination: './uploads',
-            filename: (req, file, cb) => {
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-                cb(null, file.fieldname + '-' + uniqueSuffix + (0, path_1.extname)(file.originalname));
-            }
-        })
-    })),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
