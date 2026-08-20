@@ -26,7 +26,7 @@ export const applyAdvancedFilters = <T extends Record<string, any>>(
 
       // Handle nested fields like locatype.locatype_name
       const keys = f.field.split('.');
-      let val = item;
+      let val: any = item;
       for (const key of keys) {
         if (val === undefined || val === null) break;
         val = val[key];

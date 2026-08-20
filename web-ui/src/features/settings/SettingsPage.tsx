@@ -62,7 +62,7 @@ export const SettingsPage: React.FC = () => {
       });
       if (!res.ok) throw new Error('Upload failed');
       const data = await res.json();
-      setSettings(prev => ({ ...prev, [field]: data.url }));
+      setSettings((prev: any) => ({ ...prev, [field]: data.url }));
       toast.success('Upload complete!', { id: toastId });
     } catch (err: any) {
       toast.error(err.message, { id: toastId });
