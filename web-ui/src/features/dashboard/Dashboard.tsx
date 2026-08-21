@@ -50,9 +50,15 @@ export const Dashboard = () => {
     if (end) query.push(`endDate=${end}`);
     const fetchUrl = '/api/dashboard/stats' + (query.length ? '?' + query.join('&') : '');
 
-    fetch(fetchUrl)
+    const token = localStorage.getItem('token');
+
+    fetch(fetchUrl, {
+      headers: {
+        'Authorization': token ? `Bearer ${token}` : ''
+      }
+    })
       .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch stats');
+        if (!r.ok) throw new Error(`Failed to fetch stats (Status: ${r.status})`);
         return r.json();
       })
       .then(data => {
