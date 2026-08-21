@@ -33,6 +33,7 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
     if (req.user.role?.toLowerCase() !== 'admin') throw new UnauthorizedException('Admin only');
-    return this.usersService.remove(id);
+    const userId = req.user.sub || req.user.id || 'unknown';
+    return this.usersService.remove(id, userId);
   }
 }

@@ -131,11 +131,14 @@ model tb_voucher {
 }
 
 model tb_user {
-  id         String   @id @default(uuid())
-  username   String   @unique
-  email      String   @unique
+  id         String    @id @default(uuid())
+  username   String    @unique
+  email      String    @unique
   password   String
-  role       String   @default("User")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  role       String    @default("User")
+  is_deleted Boolean   @default(false)
+  deleted_by String?
+  deleted_at DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 }
