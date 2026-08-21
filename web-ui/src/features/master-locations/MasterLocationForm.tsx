@@ -32,15 +32,18 @@ export const MasterLocationForm: React.FC<Props> = ({ initialData, onSubmit, isL
     fetchLocatypes();
   }, []);
 
+  React.useEffect(() => {
+    if (locatypes.length > 0 && initialData?.location_locatype) {
+      setValue('location_locatype', initialData.location_locatype);
+    }
+  }, [locatypes, initialData, setValue]);
+
   const fetchLocatypes = async () => {
     try {
       const res = await fetch('/api/master-locatypes', { headers: {  }});
       if (res.ok) {
         const data = await res.json();
         setLocatypes(data);
-        if (initialData?.location_locatype) {
-          setValue('location_locatype', initialData.location_locatype);
-        }
       }
     } catch (e) {
       console.error('Failed to fetch locatypes', e);
