@@ -257,7 +257,7 @@ export const VoucherHtmlPrint: React.FC = () => {
                 )}
               </div>
               <p className="font-mali font-bold text-sky-800 text-sm bg-sky-100 px-3 py-1 rounded-full border border-sky-200">
-                Scan for E-Voucher!
+                Scan for contact
               </p>
             </div>
 
