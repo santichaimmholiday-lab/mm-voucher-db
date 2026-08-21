@@ -51,8 +51,10 @@ model tb_customer {
   id           String    @id @default(uuid())
   cus_nickname String    @unique
   cus_name     String
+  cus_address  String?
   cus_tel      String?
   cus_fax      String?
+  cus_note     String?
   is_deleted   Boolean   @default(false)
   created_by   String?
   created_ip   String?
