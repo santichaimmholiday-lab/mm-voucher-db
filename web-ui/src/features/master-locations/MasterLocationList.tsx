@@ -18,6 +18,7 @@ export const MasterLocationList: React.FC = () => {
   const [locations, setLocations] = useState<MasterLocation[]>([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [editingLocation, setEditingLocation] = useState<MasterLocation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -94,11 +95,11 @@ export const MasterLocationList: React.FC = () => {
     <div className="space-y-4">
       {error && <div className="p-4 bg-red-100 text-red-700 rounded-md">{error}</div>}
       
-      <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">Master Locations</h2>
         {canAdd && (
           <button 
-            onClick={() => setShowForm(true)}
+            onClick={() => { setEditingLocation(null); setShowForm(true); }}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
           >
             + Add New
@@ -108,16 +109,19 @@ export const MasterLocationList: React.FC = () => {
 
       {showForm ? (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-medium mb-4">Create Master Location</h3>
+          <h3 className="text-lg font-medium mb-4">{editingLocation ? 'Edit Master Location' : 'Create Master Location'}</h3>
           <MasterLocationForm 
             isLoading={loading}
-            onCancel={() => setShowForm(false)}
+            initialData={editingLocation ? (editingLocation as any) : undefined}
+            onCancel={() => { setShowForm(false); setEditingLocation(null); }}
             onSubmit={async (data) => {
               setLoading(true);
               setError('');
               try {
-                const res = await fetch('/api/master-locations', {
-                  method: 'POST',
+                const url = editingLocation ? `/api/master-locations/${editingLocation.id}` : '/api/master-locations';
+                const method = editingLocation ? 'PATCH' : 'POST';
+                const res = await fetch(url, {
+                  method,
                   headers: {
                     'Content-Type': 'application/json',
                     
@@ -130,8 +134,9 @@ export const MasterLocationList: React.FC = () => {
                   throw new Error(errData.message || 'Failed to save location');
                 }
                 
-                toast.success('Location saved successfully!');
+                toast.success(editingLocation ? 'Location updated successfully!' : 'Location saved successfully!');
                 setShowForm(false);
+                setEditingLocation(null);
                 fetchLocations();
               } catch (err: any) {
                 toast.error('Backend Error: ' + err.message);
@@ -182,7 +187,7 @@ export const MasterLocationList: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end space-x-2">
                         {canEdit && (
-                          <button className="inline-flex items-center justify-center px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700 border border-amber-200 rounded-md transition-colors" title="Edit">
+                          <button onClick={() => { setEditingLocation(loc); setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="inline-flex items-center justify-center px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700 border border-amber-200 rounded-md transition-colors" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>

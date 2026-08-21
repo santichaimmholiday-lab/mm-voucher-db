@@ -18,6 +18,7 @@ export const CustomerList: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -101,7 +102,7 @@ export const CustomerList: React.FC = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">Master Customers</h2>
         <button 
-          onClick={() => setShowForm(true)} 
+          onClick={() => { setEditingCustomer(null); setShowForm(true); }} 
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
         >
           + Add New
@@ -110,15 +111,18 @@ export const CustomerList: React.FC = () => {
 
       {showForm ? (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-medium mb-4">Create Customer</h3>
+          <h3 className="text-lg font-medium mb-4">{editingCustomer ? 'Edit Customer' : 'Create Customer'}</h3>
           <CustomerForm 
             isLoading={loading}
-            onCancel={() => setShowForm(false)}
+            initialData={editingCustomer || undefined}
+            onCancel={() => { setShowForm(false); setEditingCustomer(null); }}
             onSubmit={async (data) => {
               setLoading(true);
               try {
-                const res = await fetch('/api/customers', {
-                  method: 'POST',
+                const url = editingCustomer ? `/api/customers/${editingCustomer.id}` : '/api/customers';
+                const method = editingCustomer ? 'PATCH' : 'POST';
+                const res = await fetch(url, {
+                  method,
                   headers: {
                     'Content-Type': 'application/json',
                     
@@ -129,8 +133,9 @@ export const CustomerList: React.FC = () => {
                   const errData = await res.json().catch(() => ({}));
                   throw new Error(errData.message || 'Failed to save customer');
                 }
-                toast.success('Customer saved successfully!');
+                toast.success(editingCustomer ? 'Customer updated successfully!' : 'Customer saved successfully!');
                 setShowForm(false);
+                setEditingCustomer(null);
                 fetchCustomers();
               } catch (err: any) {
                 toast.error('Backend Error: ' + err.message);
@@ -179,7 +184,7 @@ export const CustomerList: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap">{cus.cus_fax || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end space-x-2">
-                        <button className="inline-flex items-center justify-center px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700 border border-amber-200 rounded-md transition-colors" title="Edit">
+                        <button onClick={() => { setEditingCustomer(cus); setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="inline-flex items-center justify-center px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700 border border-amber-200 rounded-md transition-colors" title="Edit">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
