@@ -9,6 +9,7 @@ import { PermissionsDashboard } from './features/auth/PermissionsDashboard';
 import { MasterLocationList } from './features/master-locations/MasterLocationList';
 import { CustomerList } from './features/customers/CustomerList';
 import { VoucherList } from './features/vouchers/VoucherList';
+import { VoucherHtmlPrint } from './features/vouchers/VoucherHtmlPrint';
 import { SettingsPage } from './features/settings/SettingsPage';
 import { UserList } from './features/users/UserList';
 import { ChangePasswordModal } from './features/users/ChangePasswordModal';
@@ -133,7 +134,7 @@ function App() {
 
       <div className="min-h-screen bg-gray-50 flex flex-col">
         {/* Navigation Bar */}
-        <nav className="bg-blue-800 text-white shadow-lg">
+        <nav className="print:hidden bg-blue-800 text-white shadow-lg">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center space-x-4">
@@ -206,6 +207,7 @@ function App() {
             <Route path="/master-locations" element={<MasterLocationList />} />
             <Route path="/customers" element={<CustomerList />} />
             <Route path="/vouchers" element={<VoucherList />} />
+            <Route path="/vouchers/:id/print" element={<VoucherHtmlPrint />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/users" element={<UserList />} />
             <Route path="/api/vouchers/:id/pdf" element={<MockPdfPreview />} />
