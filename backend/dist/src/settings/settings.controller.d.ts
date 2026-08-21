@@ -1,8 +1,11 @@
 import { SettingsService } from './settings.service';
+import { BackupService } from './backup.service';
+import type { Response } from 'express';
 export declare class SettingsController {
     private readonly settingsService;
+    private readonly backupService;
     private supabase;
-    constructor(settingsService: SettingsService);
+    constructor(settingsService: SettingsService, backupService: BackupService);
     getSettings(): Promise<{}>;
     updateSettings(data: any): Promise<{
         id: string;
@@ -20,6 +23,7 @@ export declare class SettingsController {
         condition_hotel: string | null;
         condition_tour: string | null;
     }>;
+    downloadExcelBackup(res: Response): Promise<void>;
     uploadFile(file: Express.Multer.File): Promise<{
         url: any;
     }>;

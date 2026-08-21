@@ -108,7 +108,7 @@ const generateVoucherHtml = (voucher, settings, generatedQrCodeBase64) => {
           </div>
           <div class="company-info">
             <div class="company-name">${settings.company_name || 'MM HOLIDAYS CO., LTD.'}</div>
-            <div class="company-name-th">${settings.company_name_th || ''}</div>
+            <div class="company-name-th">${settings.company_name_th || 'บริษัท เอ็มเอ็ม ฮอลิเดย์ จำกัด'}</div>
             <div>${settings.company_address || ''}</div>
             <div>Tel: ${settings.company_tel || ''} | Web: ${settings.company_web || ''}</div>
             <div>Email: ${settings.company_email || ''}</div>
@@ -161,12 +161,12 @@ const generateVoucherHtml = (voucher, settings, generatedQrCodeBase64) => {
     <html lang="en">
     <head>
       <meta charset="UTF-8">
-      <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
       <style>
         @page { size: A4 portrait; margin: 0; }
         body {
           margin: 0; padding: 0;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: 'Noto Sans Thai', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           width: 210mm; height: 297mm; position: relative; background: white;
         }
         .a5-container {

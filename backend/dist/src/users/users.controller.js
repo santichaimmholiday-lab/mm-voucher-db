@@ -22,12 +22,12 @@ let UsersController = class UsersController {
         this.usersService = usersService;
     }
     findAll(req) {
-        if (req.user.role !== 'Admin')
+        if (req.user.role?.toLowerCase() !== 'admin')
             throw new common_1.UnauthorizedException('Admin only');
         return this.usersService.findAll();
     }
     create(createDto, req) {
-        if (req.user.role !== 'Admin')
+        if (req.user.role?.toLowerCase() !== 'admin')
             throw new common_1.UnauthorizedException('Admin only');
         return this.usersService.create(createDto);
     }
@@ -35,14 +35,15 @@ let UsersController = class UsersController {
         return this.usersService.changePassword(req.user.sub, body.oldPassword, body.newPassword);
     }
     update(id, updateDto, req) {
-        if (req.user.role !== 'Admin')
+        if (req.user.role?.toLowerCase() !== 'admin')
             throw new common_1.UnauthorizedException('Admin only');
         return this.usersService.update(id, updateDto);
     }
     remove(id, req) {
-        if (req.user.role !== 'Admin')
+        if (req.user.role?.toLowerCase() !== 'admin')
             throw new common_1.UnauthorizedException('Admin only');
-        return this.usersService.remove(id);
+        const userId = req.user.sub || req.user.id || 'unknown';
+        return this.usersService.remove(id, userId);
     }
 };
 exports.UsersController = UsersController;

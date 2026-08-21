@@ -27,6 +27,9 @@ const app_controller_1 = require("./app.controller");
 const users_controller_1 = require("./users/users.controller");
 const users_service_1 = require("./users/users.service");
 const jwt_1 = require("@nestjs/jwt");
+const permissions_module_1 = require("./permissions/permissions.module");
+const dashboard_module_1 = require("./dashboard/dashboard.module");
+const audit_module_1 = require("./audit/audit.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -44,7 +47,10 @@ exports.AppModule = AppModule = __decorate([
             }),
             prisma_module_1.PrismaModule,
             master_locatypes_module_1.MasterLocatypesModule,
-            settings_module_1.SettingsModule
+            settings_module_1.SettingsModule,
+            permissions_module_1.PermissionsModule,
+            dashboard_module_1.DashboardModule,
+            audit_module_1.AuditModule
         ],
         controllers: [
             master_locations_controller_1.MasterLocationsController,

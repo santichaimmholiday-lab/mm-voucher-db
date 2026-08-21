@@ -53,6 +53,7 @@ let UsersService = class UsersService {
     }
     async findAll() {
         const users = await this.prisma.tb_user.findMany({
+            where: { is_deleted: false },
             select: {
                 id: true,
                 email: true,
@@ -65,7 +66,10 @@ let UsersService = class UsersService {
     }
     async create(data) {
         const existing = await this.prisma.tb_user.findFirst({
-            where: { OR: [{ email: data.email }, { username: data.username }] }
+            where: {
+                OR: [{ email: data.email }, { username: data.username }],
+                is_deleted: false
+            }
         });
         if (existing) {
             throw new common_1.BadRequestException('User with this email or username already exists');
@@ -92,9 +96,14 @@ let UsersService = class UsersService {
             select: { id: true, email: true, username: true, role: true }
         });
     }
-    async remove(id) {
-        return this.prisma.tb_user.delete({
-            where: { id }
+    async remove(id, userId) {
+        return this.prisma.tb_user.update({
+            where: { id },
+            data: {
+                is_deleted: true,
+                deleted_by: userId,
+                deleted_at: new Date()
+            }
         });
     }
     async changePassword(userId, oldPass, newPass) {

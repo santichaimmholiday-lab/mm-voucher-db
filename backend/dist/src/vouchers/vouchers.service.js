@@ -48,13 +48,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VouchersService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const audit_service_1 = require("../audit/audit.service");
 const QRCode = __importStar(require("qrcode"));
 const html_pdf_node_1 = __importDefault(require("html-pdf-node"));
 const voucher_pdf_template_1 = require("./voucher-pdf.template");
 let VouchersService = class VouchersService {
     prisma;
-    constructor(prisma) {
+    auditService;
+    constructor(prisma, auditService) {
         this.prisma = prisma;
+        this.auditService = auditService;
     }
     async getDashboardStats() {
         const today = new Date();
@@ -114,6 +117,11 @@ let VouchersService = class VouchersService {
                         voucher_status: 'Waiting',
                         created_by: userId,
                     }
+                });
+                await this.auditService.logAction(userId, 'CREATE', 'VOUCHER', voucher.id, {
+                    voucher_no: voucher.voucher_no,
+                    voucher_type: voucher.voucher_type,
+                    guest_name: voucher.voucher_guest_name
                 });
                 return voucher;
             });
@@ -206,23 +214,27 @@ let VouchersService = class VouchersService {
         };
     }
     async findOne(id) {
-        const voucher = await this.prisma.tb_voucher.findFirst({
+        const voucher = await this.prisma.tb_voucher.findUnique({
             where: { id, is_deleted: false },
             include: {
-                hotel: true,
                 attraction: true,
-                tour: true,
-                pickup_hotel: true
+                hotel: true,
+                pickup_hotel: true,
+                tour: true
             }
         });
         if (!voucher)
             throw new common_1.NotFoundException('Voucher not found');
         return voucher;
     }
+    async getLogs(id) {
+        return this.auditService.getEntityLogs(id);
+    }
     async update(id, updateDto, userId) {
         const { hotel, tour, attraction, created_at, updated_at, created_by, updated_by, ...voucherData } = updateDto;
         try {
             return await this.prisma.$transaction(async (tx) => {
+                const oldVoucher = await tx.tb_voucher.findUnique({ where: { id } });
                 const voucher = await tx.tb_voucher.update({
                     where: { id },
                     data: {
@@ -231,6 +243,11 @@ let VouchersService = class VouchersService {
                         updated_at: new Date()
                     }
                 });
+                let details = `Updated voucher`;
+                if (oldVoucher?.voucher_status !== voucher.voucher_status) {
+                    details = `Changed status from ${oldVoucher?.voucher_status} to ${voucher.voucher_status}`;
+                }
+                await this.auditService.logAction(userId, 'UPDATE', 'VOUCHER', voucher.id, details);
                 return voucher;
             });
         }
@@ -240,10 +257,12 @@ let VouchersService = class VouchersService {
         }
     }
     async remove(id, userId) {
-        return this.prisma.tb_voucher.update({
+        const voucher = await this.prisma.tb_voucher.update({
             where: { id },
             data: { is_deleted: true, deleted_by: userId, deleted_at: new Date() }
         });
+        await this.auditService.logAction(userId, 'DELETE', 'VOUCHER', id, 'Deleted/Cancelled Voucher');
+        return voucher;
     }
     async generatePdf(id) {
         const voucher = await this.findOne(id);
@@ -260,6 +279,7 @@ let VouchersService = class VouchersService {
 exports.VouchersService = VouchersService;
 exports.VouchersService = VouchersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        audit_service_1.AuditService])
 ], VouchersService);
 //# sourceMappingURL=vouchers.service.js.map

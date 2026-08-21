@@ -10,6 +10,7 @@ exports.SettingsModule = void 0;
 const common_1 = require("@nestjs/common");
 const settings_controller_1 = require("./settings.controller");
 const settings_service_1 = require("./settings.service");
+const backup_service_1 = require("./backup.service");
 const prisma_module_1 = require("../prisma/prisma.module");
 let SettingsModule = class SettingsModule {
 };
@@ -18,7 +19,7 @@ exports.SettingsModule = SettingsModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule],
         controllers: [settings_controller_1.SettingsController],
-        providers: [settings_service_1.SettingsService]
+        providers: [settings_service_1.SettingsService, backup_service_1.BackupService]
     })
 ], SettingsModule);
 //# sourceMappingURL=settings.module.js.map

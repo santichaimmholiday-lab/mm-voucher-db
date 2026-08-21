@@ -21,10 +21,13 @@ export declare class UsersService {
         email: string;
         role: string;
     }>;
-    remove(id: string): Promise<{
+    remove(id: string, userId: string): Promise<{
         id: string;
+        is_deleted: boolean;
         created_at: Date;
         updated_at: Date;
+        deleted_by: string | null;
+        deleted_at: Date | null;
         username: string;
         email: string;
         password: string;

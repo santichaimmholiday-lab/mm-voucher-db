@@ -25,6 +25,7 @@ import { UsersService } from './users/users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PermissionsModule } from './permissions/permissions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
@@ -41,7 +42,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     MasterLocatypesModule, 
     SettingsModule,
     PermissionsModule,
-    DashboardModule
+    DashboardModule,
+    AuditModule
   ],
   controllers: [
     MasterLocationsController,

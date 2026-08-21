@@ -26,8 +26,11 @@ export declare class UsersController {
     }>;
     remove(id: string, req: any): Promise<{
         id: string;
+        is_deleted: boolean;
         created_at: Date;
         updated_at: Date;
+        deleted_by: string | null;
+        deleted_at: Date | null;
         username: string;
         email: string;
         password: string;

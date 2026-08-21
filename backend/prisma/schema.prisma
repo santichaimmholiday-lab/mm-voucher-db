@@ -157,3 +157,13 @@ model tb_role_permission {
 
   @@unique([role, module])
 }
+
+model tb_audit_log {
+  id          String   @id @default(uuid())
+  user_name   String
+  action      String   // CREATE, UPDATE, DELETE
+  entity_type String   // VOUCHER, CUSTOMER, etc.
+  entity_id   String
+  details     String?  // JSON string of changes or description
+  created_at  DateTime @default(now())
+}

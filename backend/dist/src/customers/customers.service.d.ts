@@ -18,8 +18,10 @@ export declare class CustomersService {
         deleted_at: Date | null;
         cus_nickname: string;
         cus_name: string;
+        cus_address: string | null;
         cus_tel: string | null;
         cus_fax: string | null;
+        cus_note: string | null;
     }>;
     findAll(): Promise<{
         id: string;
@@ -35,8 +37,10 @@ export declare class CustomersService {
         deleted_at: Date | null;
         cus_nickname: string;
         cus_name: string;
+        cus_address: string | null;
         cus_tel: string | null;
         cus_fax: string | null;
+        cus_note: string | null;
     }[]>;
     findOne(id: string): Promise<{
         id: string;
@@ -52,8 +56,10 @@ export declare class CustomersService {
         deleted_at: Date | null;
         cus_nickname: string;
         cus_name: string;
+        cus_address: string | null;
         cus_tel: string | null;
         cus_fax: string | null;
+        cus_note: string | null;
     }>;
     update(id: string, updateDto: UpdateCustomerDto, userId: string): Promise<{
         id: string;
@@ -69,8 +75,10 @@ export declare class CustomersService {
         deleted_at: Date | null;
         cus_nickname: string;
         cus_name: string;
+        cus_address: string | null;
         cus_tel: string | null;
         cus_fax: string | null;
+        cus_note: string | null;
     }>;
     remove(id: string, userId: string): Promise<{
         id: string;
@@ -86,7 +94,9 @@ export declare class CustomersService {
         deleted_at: Date | null;
         cus_nickname: string;
         cus_name: string;
+        cus_address: string | null;
         cus_tel: string | null;
         cus_fax: string | null;
+        cus_note: string | null;
     }>;
 }

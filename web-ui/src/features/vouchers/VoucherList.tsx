@@ -7,6 +7,7 @@ import { Pagination } from '../../components/Pagination';
 import { AdvancedSearch } from '../../components/AdvancedSearch';
 import { FilterCondition, FilterField } from '../../utils/filterUtils';
 import { useDebounce } from '../../hooks/useDebounce';
+import { VoucherHistoryModal } from './VoucherHistoryModal';
 
 const VOUCHER_FIELDS: FilterField[] = [
   { id: 'voucher_no', label: 'Voucher No.', type: 'text' },
@@ -22,6 +23,7 @@ export const VoucherList: React.FC = () => {
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<any>(null);
+  const [viewHistoryVoucherId, setViewHistoryVoucherId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -219,6 +221,16 @@ export const VoucherList: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end space-x-2">
+                        <button 
+                          onClick={() => setViewHistoryVoucherId(v.id)} 
+                          className="inline-flex items-center justify-center px-3 py-1.5 bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors"
+                          title="View History"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          History
+                        </button>
                         {canPrint && (
                           <button 
                             onClick={() => handlePrint(v.id)} 
@@ -279,6 +291,13 @@ export const VoucherList: React.FC = () => {
             onPageChange={setCurrentPage}
           />
         </div>
+      )}
+
+      {viewHistoryVoucherId && (
+        <VoucherHistoryModal 
+          voucherId={viewHistoryVoucherId} 
+          onClose={() => setViewHistoryVoucherId(null)} 
+        />
       )}
     </div>
   );

@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'; 
+import { AuditService } from '../audit/audit.service';
 import * as QRCode from 'qrcode';
 import html_to_pdf from 'html-pdf-node';
 import { generateVoucherHtml } from './voucher-pdf.template';
 
 @Injectable()
 export class VouchersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditService: AuditService
+  ) {}
 
   async getDashboardStats() {
     const today = new Date();
@@ -68,17 +72,24 @@ export class VouchersService {
     const voucher_no = await this.generateVoucherNumber(voucherData.voucher_issue_date);
 
     try {
-      return await this.prisma.$transaction(async (tx) => {
-        const voucher = await tx.tb_voucher.create({
-          data: {
-            ...voucherData,
-            voucher_no,
-            voucher_status: 'Waiting',
-            created_by: userId,
-          }
+        return await this.prisma.$transaction(async (tx) => {
+          const voucher = await tx.tb_voucher.create({
+            data: {
+              ...voucherData,
+              voucher_no,
+              voucher_status: 'Waiting',
+              created_by: userId,
+            }
+          });
+          
+          await this.auditService.logAction(userId, 'CREATE', 'VOUCHER', voucher.id, {
+            voucher_no: voucher.voucher_no,
+            voucher_type: voucher.voucher_type,
+            guest_name: voucher.voucher_guest_name
+          });
+
+          return voucher;
         });
-        return voucher;
-      });
     } catch (error) {
       console.error('Prisma Transaction Error:', error);
       throw new InternalServerErrorException('Failed to create composite voucher transaction');
@@ -172,34 +183,47 @@ export class VouchersService {
   }
 
   async findOne(id: string) {
-    const voucher = await this.prisma.tb_voucher.findFirst({
+    const voucher = await this.prisma.tb_voucher.findUnique({
       where: { id, is_deleted: false },
       include: {
-        hotel: true,
         attraction: true,
-        tour: true,
-        pickup_hotel: true
+        hotel: true,
+        pickup_hotel: true,
+        tour: true
       }
     });
     if (!voucher) throw new NotFoundException('Voucher not found');
     return voucher;
   }
 
+  async getLogs(id: string) {
+    return this.auditService.getEntityLogs(id);
+  }
+
   async update(id: string, updateDto: any, userId: string) {
     const { hotel, tour, attraction, created_at, updated_at, created_by, updated_by, ...voucherData } = updateDto;
 
     try {
-      return await this.prisma.$transaction(async (tx) => {
-        const voucher = await tx.tb_voucher.update({
-          where: { id },
-          data: {
-            ...voucherData,
-            updated_by: userId,
-            updated_at: new Date()
+        return await this.prisma.$transaction(async (tx) => {
+          const oldVoucher = await tx.tb_voucher.findUnique({ where: { id } });
+          const voucher = await tx.tb_voucher.update({
+            where: { id },
+            data: {
+              ...voucherData,
+              updated_by: userId,
+              updated_at: new Date()
+            }
+          });
+          
+          let details = `Updated voucher`;
+          if (oldVoucher?.voucher_status !== voucher.voucher_status) {
+            details = `Changed status from ${oldVoucher?.voucher_status} to ${voucher.voucher_status}`;
           }
+
+          await this.auditService.logAction(userId, 'UPDATE', 'VOUCHER', voucher.id, details);
+
+          return voucher;
         });
-        return voucher;
-      });
     } catch (error) {
       console.error('Prisma Transaction Error (Update):', error);
       throw new InternalServerErrorException('Failed to update voucher');
@@ -207,10 +231,12 @@ export class VouchersService {
   }
 
   async remove(id: string, userId: string) {
-    return this.prisma.tb_voucher.update({
+    const voucher = await this.prisma.tb_voucher.update({
       where: { id },
       data: { is_deleted: true, deleted_by: userId, deleted_at: new Date() }
     });
+    await this.auditService.logAction(userId, 'DELETE', 'VOUCHER', id, 'Deleted/Cancelled Voucher');
+    return voucher;
   }
 
   async generatePdf(id: string): Promise<Buffer> {

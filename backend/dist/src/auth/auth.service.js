@@ -102,9 +102,23 @@ let AuthService = class AuthService {
     async checkUserPermission(userId, roleName, module, action) {
         if (roleName === 'Admin')
             return true;
-        if (roleName === 'Manager' && action === 'printx')
-            return true;
-        return true;
+        const permission = await this.prisma.tb_role_permission.findUnique({
+            where: {
+                role_module: { role: roleName, module }
+            }
+        });
+        if (!permission)
+            return false;
+        switch (action.toLowerCase()) {
+            case 'read': return permission.can_read;
+            case 'add': return permission.can_add;
+            case 'edit': return permission.can_edit;
+            case 'delete': return permission.can_delete;
+            case 'printx': return permission.can_printx;
+            case 'confirm': return permission.can_confirm;
+            case 'upload': return permission.can_upload;
+            default: return false;
+        }
     }
 };
 exports.AuthService = AuthService;

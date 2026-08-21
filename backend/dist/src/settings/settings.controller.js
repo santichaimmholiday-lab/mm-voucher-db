@@ -16,12 +16,15 @@ exports.SettingsController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const settings_service_1 = require("./settings.service");
+const backup_service_1 = require("./backup.service");
 const supabase_js_1 = require("@supabase/supabase-js");
 let SettingsController = class SettingsController {
     settingsService;
+    backupService;
     supabase;
-    constructor(settingsService) {
+    constructor(settingsService, backupService) {
         this.settingsService = settingsService;
+        this.backupService = backupService;
         this.supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL || '', process.env.SUPABASE_KEY || '');
     }
     getSettings() {
@@ -29,6 +32,9 @@ let SettingsController = class SettingsController {
     }
     updateSettings(data) {
         return this.settingsService.updateSettings(data);
+    }
+    downloadExcelBackup(res) {
+        return this.backupService.generateExcelBackup(res);
     }
     async uploadFile(file) {
         if (!file)
@@ -67,6 +73,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SettingsController.prototype, "updateSettings", null);
 __decorate([
+    (0, common_1.Get)('backup/excel'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SettingsController.prototype, "downloadExcelBackup", null);
+__decorate([
     (0, common_1.Post)('upload'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.UploadedFile)()),
@@ -76,6 +89,7 @@ __decorate([
 ], SettingsController.prototype, "uploadFile", null);
 exports.SettingsController = SettingsController = __decorate([
     (0, common_1.Controller)('api/settings'),
-    __metadata("design:paramtypes", [settings_service_1.SettingsService])
+    __metadata("design:paramtypes", [settings_service_1.SettingsService,
+        backup_service_1.BackupService])
 ], SettingsController);
 //# sourceMappingURL=settings.controller.js.map

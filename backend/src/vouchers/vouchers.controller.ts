@@ -34,6 +34,11 @@ export class VouchersController {
     return this.vouchersService.findOne(id);
   }
 
+  @Get(':id/logs')
+  async getLogs(@Param('id') id: string) {
+    return this.vouchersService.getLogs(id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDto: any, @Req() req: any) {
     const username = req.user?.email ? req.user.email.split('@')[0] : 'System';

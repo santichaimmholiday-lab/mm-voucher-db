@@ -35,6 +35,9 @@ let VouchersController = class VouchersController {
     findOne(id) {
         return this.vouchersService.findOne(id);
     }
+    async getLogs(id) {
+        return this.vouchersService.getLogs(id);
+    }
     update(id, updateDto, req) {
         const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
         return this.vouchersService.update(id, updateDto, username);
@@ -85,6 +88,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], VouchersController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Get)(':id/logs'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], VouchersController.prototype, "getLogs", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
