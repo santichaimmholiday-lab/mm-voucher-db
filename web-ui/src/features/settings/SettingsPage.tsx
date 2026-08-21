@@ -168,6 +168,44 @@ export const SettingsPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Data Backup Card */}
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 md:col-span-2 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-bold text-gray-800">Database Backup</h3>
+            <p className="text-sm text-gray-500 mt-1">Download all system data (Users, Customers, Vouchers, etc.) as an Excel file.</p>
+          </div>
+          <button 
+            type="button" 
+            onClick={async () => {
+              const toastId = toast.loading('Generating Excel backup...');
+              try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('/api/settings/backup/excel', {
+                  headers: { 'Authorization': token ? `Bearer ${token}` : '' }
+                });
+                if (!res.ok) throw new Error('Failed to generate backup');
+                
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `mm-holiday-backup-${new Date().toISOString().split('T')[0]}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                
+                toast.success('Backup downloaded successfully!', { id: toastId });
+              } catch (e: any) {
+                toast.error(e.message, { id: toastId });
+              }
+            }}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-sm font-medium transition-colors"
+          >
+            Download Excel Backup
+          </button>
+        </div>
       </div>
     </div>
   );

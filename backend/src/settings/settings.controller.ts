@@ -1,16 +1,21 @@
-import { Controller, Get, Put, Body, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Put, Body, Post, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { SettingsService } from './settings.service';
+import { BackupService } from './backup.service';
 
 import { createClient } from '@supabase/supabase-js';
+import type { Response } from 'express';
 
 @Controller('api/settings')
 export class SettingsController {
   private supabase;
 
-  constructor(private readonly settingsService: SettingsService) {
+  constructor(
+    private readonly settingsService: SettingsService,
+    private readonly backupService: BackupService
+  ) {
     // Initialize Supabase client
     this.supabase = createClient(
       process.env.SUPABASE_URL || '',
@@ -26,6 +31,11 @@ export class SettingsController {
   @Put()
   updateSettings(@Body() data: any) {
     return this.settingsService.updateSettings(data);
+  }
+
+  @Get('backup/excel')
+  downloadExcelBackup(@Res() res: Response) {
+    return this.backupService.generateExcelBackup(res);
   }
 
   @Post('upload')
