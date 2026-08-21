@@ -194,18 +194,18 @@ export const VoucherHtmlPrint: React.FC = () => {
             
             <div className="font-mali text-gray-700 text-lg">
               {voucher.voucher_type === 'HOTEL' && (
-                <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                <div className="grid grid-cols-2 gap-y-2 gap-x-6">
                   <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Hotel Name</span> <span className="font-bold text-purple-900">{voucher.hotel?.location_name || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Address</span> <span>{voucher.hotel?.location_address || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Check In</span> <span className="text-green-600 font-bold">{voucher.check_in_date ? format(new Date(voucher.check_in_date), 'dd MMM yyyy') : '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Check Out</span> <span className="text-red-500 font-bold">{voucher.check_out_date ? format(new Date(voucher.check_out_date), 'dd MMM yyyy') : '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Room Type</span> <span>{voucher.room_type || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">No. of Rooms</span> <span>{voucher.number_of_rooms || '-'} Room(s)</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Booking Conf No</span> <span>{voucher.conf_no || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Meal</span> <span>{voucher.meal || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Payment By</span> <span>{voucher.payment_by || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Confirmation By</span> <span>{voucher.conf_by || '-'}</span></div>
-                  <div className="flex flex-col col-span-2 bg-purple-50 p-3 rounded-xl border border-purple-100"><span className="text-xs text-purple-400 uppercase font-sans font-bold mb-1"><CheckCircle2 className="w-3 h-3 inline" /> Inclusions</span> <span>{voucher.hotel_inclusion || '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Address</span> <span className="text-purple-900 font-bold">{voucher.hotel?.location_address || '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Check-in Date</span> <span className="font-bold text-purple-900">{voucher.check_in_date ? format(new Date(voucher.check_in_date), 'dd/MM/yyyy') : '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Check-out Date</span> <span className="font-bold text-purple-900">{voucher.check_out_date ? format(new Date(voucher.check_out_date), 'dd/MM/yyyy') : '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Room Type</span> <span className="text-purple-900 font-bold">{voucher.room_type || '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">No. of Rooms</span> <span className="text-purple-900 font-bold">{voucher.number_of_rooms || '-'} Room(s)</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Booking Conf No</span> <span className="text-purple-900 font-bold">{voucher.conf_no || '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Meal</span> <span className="text-purple-900 font-bold">{voucher.meal || '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Payment By</span> <span className="text-purple-900 font-bold">{voucher.payment_by || '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-xs text-gray-400 uppercase font-sans font-bold">Confirmation By</span> <span className="text-purple-900 font-bold">{voucher.conf_by || '-'}</span></div>
+                  <div className="flex flex-col col-span-2 bg-purple-50 p-3 rounded-xl border border-purple-100"><span className="text-xs text-purple-400 uppercase font-sans font-bold mb-1"><CheckCircle2 className="w-3 h-3 inline" /> Inclusions</span> <span className="text-purple-900 font-bold">{voucher.hotel_inclusion || '-'}</span></div>
                 </div>
               )}
 
