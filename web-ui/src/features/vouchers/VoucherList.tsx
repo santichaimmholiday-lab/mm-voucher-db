@@ -41,6 +41,14 @@ export const VoucherList: React.FC = () => {
   const debouncedSearch = useDebounce(search, 500);
   const debouncedAdvancedFilters = useDebounce(advancedFilters, 500);
 
+  // Check for auto-open form from query string
+  useEffect(() => {
+    if (window.location.search.includes('new=1')) {
+      setShowForm(true);
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
+
   const fetchVouchers = useCallback(async () => {
     try {
       setLoading(true);

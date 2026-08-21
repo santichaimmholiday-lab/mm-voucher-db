@@ -111,7 +111,7 @@ export const Dashboard = () => {
             </div>
           )}
           
-          <Link to="/vouchers/new" className="ml-auto md:ml-2 bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 shadow-sm text-sm font-medium">
+          <Link to="/vouchers?new=1" className="ml-auto md:ml-2 bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 shadow-sm text-sm font-medium">
             + Issue Voucher
           </Link>
         </div>
