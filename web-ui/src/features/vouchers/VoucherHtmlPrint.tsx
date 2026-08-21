@@ -60,16 +60,31 @@ export const VoucherHtmlPrint: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 print:bg-white font-sans p-4 print:p-0">
+    <div className="min-h-screen bg-gray-50 print:bg-white font-sans p-4 print:p-0 print:overflow-hidden print:h-screen">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,400;0,600;0,700;1,400&display=swap');
           .font-mali { font-family: 'Mali', cursive; }
           @media print {
-            @page { size: A4; margin: 0; }
-            body { margin: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { size: A4 portrait; margin: 0 !important; }
+            html, body { 
+              margin: 0 !important; 
+              padding: 0 !important; 
+              height: 297mm !important; 
+              overflow: hidden !important; 
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important; 
+            }
             .print-hide { display: none !important; }
             .shadow-lg, .shadow-xl, .shadow-2xl, .shadow-sm { box-shadow: none !important; }
+            .print-page-wrapper {
+              width: 210mm !important;
+              height: 296.5mm !important;
+              max-height: 296.5mm !important;
+              overflow: hidden !important;
+              margin: 0 !important;
+              page-break-after: avoid !important;
+            }
           }
         `}
       </style>
@@ -91,10 +106,10 @@ export const VoucherHtmlPrint: React.FC = () => {
       </div>
 
       {/* A4 Container */}
-      <div className="relative w-[210mm] min-h-[297mm] mx-auto bg-white print:w-full print:h-auto overflow-hidden shadow-xl p-8">
+      <div className="relative w-[210mm] h-[297mm] mx-auto bg-white overflow-hidden shadow-xl p-6 print:p-4 print-page-wrapper box-border">
         
         {/* Ticket-style inner dashed border */}
-        <div className="relative border-4 border-dashed border-sky-300 rounded-3xl h-full p-8 flex flex-col bg-sky-50/30">
+        <div className="relative border-4 border-dashed border-sky-300 rounded-3xl h-full p-6 print:p-4 flex flex-col bg-sky-50/30 overflow-hidden box-border">
           
           {/* Decorative Background Icons (Watermarks) */}
           <Sun className="absolute top-10 right-10 w-32 h-32 text-yellow-100 -z-10 rotate-12 opacity-50" />
@@ -102,7 +117,7 @@ export const VoucherHtmlPrint: React.FC = () => {
           <MapPin className="absolute top-1/2 right-20 w-48 h-48 text-pink-50 -z-10 rotate-45 opacity-50" />
 
           {/* Header */}
-          <div className="flex justify-between items-start mb-6 z-10">
+          <div className="flex justify-between items-start mb-3 z-10">
             <div className="w-48 bg-white p-3 rounded-2xl shadow-sm border border-sky-100 rotate-[-2deg]">
               {settings?.logo_image_path ? (
                 <img src={settings.logo_image_path} alt="Logo" className="max-w-full h-auto max-h-20 mx-auto" />
@@ -119,7 +134,7 @@ export const VoucherHtmlPrint: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-center mb-6 relative z-10">
+          <div className="text-center mb-3 relative z-10">
             <h2 className="text-5xl font-black text-sky-500 font-mali tracking-widest uppercase drop-shadow-sm flex justify-center items-center gap-3">
               <Palmtree className="w-10 h-10 text-emerald-400" />
               VOUCHER
@@ -131,7 +146,7 @@ export const VoucherHtmlPrint: React.FC = () => {
           </div>
 
           {/* Guest Info Grid */}
-          <div className="grid grid-cols-2 gap-4 mb-6 z-10">
+          <div className="grid grid-cols-2 gap-4 mb-3 z-10">
             <div className="bg-white p-4 rounded-2xl border-2 border-sky-200 shadow-sm flex items-center gap-3">
               <div className="bg-sky-100 p-3 rounded-full text-sky-500"><User className="w-6 h-6" /></div>
               <div>
@@ -166,7 +181,7 @@ export const VoucherHtmlPrint: React.FC = () => {
           </div>
 
           {/* Dynamic Details based on Type */}
-          <div className="bg-white p-6 rounded-3xl border-2 border-purple-200 shadow-sm mb-6 z-10 relative overflow-hidden">
+          <div className="bg-white p-6 rounded-3xl border-2 border-purple-200 shadow-sm mb-3 z-10 relative overflow-hidden">
             <div className="absolute -right-4 -top-4 bg-purple-100 w-24 h-24 rounded-full opacity-50"></div>
             
             <h3 className="font-mali font-bold text-2xl mb-4 text-purple-800 border-b-2 border-purple-100 pb-2 flex items-center">
