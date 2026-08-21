@@ -23,6 +23,7 @@ import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 
 import { JwtModule } from '@nestjs/jwt';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     PrismaModule, 
     MasterLocatypesModule, 
-    SettingsModule
+    SettingsModule,
+    PermissionsModule
   ],
   controllers: [
     MasterLocationsController,

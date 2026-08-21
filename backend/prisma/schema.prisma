@@ -142,3 +142,18 @@ model tb_user {
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
 }
+
+model tb_role_permission {
+  id          String   @id @default(uuid())
+  role        String
+  module      String
+  can_read    Boolean  @default(false)
+  can_add     Boolean  @default(false)
+  can_edit    Boolean  @default(false)
+  can_delete  Boolean  @default(false)
+  can_printx  Boolean  @default(false)
+  can_confirm Boolean  @default(false)
+  can_upload  Boolean  @default(false)
+
+  @@unique([role, module])
+}
