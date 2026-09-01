@@ -48,13 +48,13 @@ export const VoucherHtmlPrint: React.FC = () => {
 
   const getConditionText = () => {
     if (voucher.voucher_type === 'HOTEL') return settings?.condition_hotel;
-    if (voucher.voucher_type === 'TOUR') return settings?.condition_tour;
+    if (voucher.voucher_type === 'TOUR' || voucher.voucher_type === 'SHARING TOUR') return settings?.condition_tour;
     return '';
   };
 
   const getVoucherIcon = () => {
     if (voucher.voucher_type === 'HOTEL') return <Hotel className="w-8 h-8 text-pink-500 inline-block mr-2" />;
-    if (voucher.voucher_type === 'TOUR') return <MapPin className="w-8 h-8 text-green-500 inline-block mr-2" />;
+    if (voucher.voucher_type === 'TOUR' || voucher.voucher_type === 'SHARING TOUR') return <MapPin className="w-8 h-8 text-green-500 inline-block mr-2" />;
     if (voucher.voucher_type === 'TRANSPORT') return <Car className="w-8 h-8 text-blue-500 inline-block mr-2" />;
     return <Ticket className="w-8 h-8 text-purple-500 inline-block mr-2" />;
   };
@@ -69,43 +69,48 @@ export const VoucherHtmlPrint: React.FC = () => {
             @page { size: A4 portrait; margin: 0 !important; }
             html, body { 
               margin: 0 !important; 
-              padding: 0 !important; 
-              height: 297mm !important; 
-              overflow: hidden !important; 
-              -webkit-print-color-adjust: exact !important; 
-              print-color-adjust: exact !important; 
+              padding: 0 !important;
+              background-color: white !important;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
             }
-            .print-hide { display: none !important; }
-            .shadow-lg, .shadow-xl, .shadow-2xl, .shadow-sm { box-shadow: none !important; }
+            body * {
+              visibility: hidden;
+            }
+            .print-page-wrapper, .print-page-wrapper * {
+              visibility: visible;
+            }
             .print-page-wrapper {
+              position: absolute;
+              left: 0;
+              top: 0;
               width: 210mm !important;
-              height: 296.5mm !important;
-              max-height: 296.5mm !important;
-              overflow: hidden !important;
+              height: 296.5mm !important; /* Slightly less than 297 to avoid blank page */
               margin: 0 !important;
-              page-break-after: avoid !important;
+              padding: 0 !important;
+              page-break-after: avoid;
+              page-break-inside: avoid;
+              box-sizing: border-box;
+              border: none !important;
+              box-shadow: none !important;
+              overflow: hidden !important;
             }
           }
         `}
       </style>
 
-      {/* Print Controls (Hidden on Print) */}
-      <div className="print-hide flex justify-between items-center max-w-[210mm] mx-auto mb-4">
-        <button 
-          onClick={() => navigate('/vouchers')}
-          className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow hover:bg-gray-50 border"
-        >
-          <ChevronLeft className="w-4 h-4" /> Back
+      {/* Back Button / Print Controls - Hidden in Print */}
+      <div className="max-w-[210mm] mx-auto mb-4 flex justify-between items-center print:hidden">
+        <button onClick={() => navigate(-1)} className="flex items-center text-sky-600 hover:text-sky-800 bg-white px-4 py-2 rounded-xl shadow-sm border border-sky-100 font-mali font-bold">
+          <ChevronLeft className="w-5 h-5 mr-1" /> Back
         </button>
-        <button 
-          onClick={() => window.print()}
-          className="flex items-center gap-2 bg-pink-500 text-white px-6 py-2 rounded-lg shadow hover:bg-pink-600 font-mali font-bold"
-        >
-          <Printer className="w-5 h-5" /> Print Cute Voucher
+        
+        <button onClick={() => window.print()} className="flex items-center bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-xl shadow-sm border border-pink-600 font-mali font-bold text-lg animate-bounce">
+          <Printer className="w-5 h-5 mr-2" /> Print Cute Voucher
         </button>
       </div>
 
-      {/* A4 Container */}
+      {/* A4 Page Container */}
       <div className="relative w-[210mm] h-[297mm] mx-auto bg-white overflow-hidden shadow-xl p-6 print:p-4 print-page-wrapper box-border">
         
         {/* Ticket-style inner dashed border */}
@@ -208,7 +213,7 @@ export const VoucherHtmlPrint: React.FC = () => {
                 </div>
               )}
 
-              {voucher.voucher_type === 'TOUR' && (
+              {(voucher.voucher_type === 'TOUR' || voucher.voucher_type === 'SHARING TOUR') && (
                 <div className="grid grid-cols-2 gap-y-1 gap-x-4">
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Tour Name</span> <span className="font-bold text-purple-900 leading-tight">{voucher.tour?.location_name || '-'}</span></div>
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Tour Date</span> <span className="text-purple-900 font-bold leading-tight">{voucher.tour_date ? format(new Date(voucher.tour_date), 'dd/MM/yyyy') : '-'}</span></div>
@@ -234,7 +239,7 @@ export const VoucherHtmlPrint: React.FC = () => {
                 </div>
               )}
               
-              {voucher.voucher_type === 'ATTRACTION' && (
+              {(voucher.voucher_type === 'ATTRACTION' || voucher.voucher_type === 'LOCAL ATTRACTION') && (
                 <div className="grid grid-cols-2 gap-y-1 gap-x-4">
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Attraction</span> <span className="font-bold text-purple-900 leading-tight">{voucher.attraction?.location_name || '-'}</span></div>
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Visit Date</span> <span className="text-purple-900 font-bold leading-tight">{voucher.visit_date ? format(new Date(voucher.visit_date), 'dd/MM/yyyy') : '-'}</span></div>
