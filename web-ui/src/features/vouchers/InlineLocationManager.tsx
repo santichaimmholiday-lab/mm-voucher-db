@@ -1,3 +1,4 @@
+import CreatableSelect from 'react-select/creatable';
 import React, { useState, useEffect } from 'react';
 import { MasterLocation } from './types';
 import toast from 'react-hot-toast';
@@ -194,3 +195,4 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
     </div>
   );
 };
+
