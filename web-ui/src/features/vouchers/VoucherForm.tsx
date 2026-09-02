@@ -262,20 +262,16 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
               <input type="number" value={formData.person_count || ''} onChange={e => handleChange('person_count', parseInt(e.target.value) || 0)} className="mt-1 w-full p-2 border rounded" />
             </div>
               <div>
-                <label className="block text-sm text-gray-700">Pick Up Hotel</label>
-                <input 
-                  type="text" 
-                  list="hotel-list"
-                  placeholder="Type or select a hotel..."
-                  value={formData.pickup_location || ''} 
-                  onChange={e => handleChange('pickup_location', e.target.value)} 
-                  className="mt-1 w-full p-2 border rounded bg-white" 
+                <InlineLocationManager
+                  label="Pick Up Hotel"
+                  typeCode="HOTEL"
+                  value={formData.pickup_location || ''}
+                  onChange={val => handleChange('pickup_location', val)}
+                  locations={locations}
+                  onLocationsUpdated={fetchLocations}
+                  valueKey="name"
+                  required={true}
                 />
-                <datalist id="hotel-list">
-                  {hotels.map(loc => (
-                    <option key={loc.id} value={loc.location_name} />
-                  ))}
-                </datalist>
               </div>
             <div>
               <label className="block text-sm text-gray-700">Pick Up Time</label>
