@@ -116,18 +116,27 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
     <div className="w-full">
       <label className="block text-sm text-gray-700">{label} {required && <span className="text-red-500">*</span>}</label>
       <div className="flex space-x-2 mt-1">
-        <select 
-          value={value || ''} 
-          onChange={e => onChange(e.target.value)} 
-          className="flex-1 p-2 border rounded bg-white"
-        >
-          <option value="">-- Choose {label} --</option>
-          {filteredLocations.map(h => (
-            <option key={h.id} value={valueKey === 'name' ? h.location_name : h.id}>
-              {h.location_name}
-            </option>
-          ))}
-        </select>
+        <div className="flex-1">
+          <CreatableSelect
+            isClearable
+            options={filteredLocations.map(h => ({
+              value: valueKey === 'name' ? h.location_name : h.id,
+              label: h.location_name
+            }))}
+            value={value ? { value: value, label: valueKey === 'name' ? value : (filteredLocations.find(l => l.id === value)?.location_name || value) } : null}
+            onChange={(newValue: any) => onChange(newValue ? newValue.value : '')}
+            placeholder={`Search or type ${label}...`}
+            formatCreateLabel={(inputValue) => `Use custom: "${inputValue}"`}
+            styles={{
+              control: (base) => ({
+                ...base,
+                minHeight: '42px',
+                borderColor: '#e5e7eb',
+                borderRadius: '0.375rem',
+              })
+            }}
+          />
+        </div>
         <button 
           type="button" 
           onClick={() => setIsManaging(!isManaging)}
