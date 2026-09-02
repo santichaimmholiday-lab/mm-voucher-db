@@ -36,6 +36,7 @@ export interface Voucher {
 
   tour_id?: string;
   pickup_hotel_id?: string;
+  pickup_location?: string;
   pickup_time?: string;
 
   conf_no?: string;

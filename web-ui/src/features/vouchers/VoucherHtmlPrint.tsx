@@ -216,9 +216,9 @@ export const VoucherHtmlPrint: React.FC = () => {
               {(voucher.voucher_type === 'TOUR' || voucher.voucher_type === 'SHARING TOUR') && (
                 <div className="grid grid-cols-2 gap-y-1 gap-x-4">
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Tour Name</span> <span className="font-bold text-purple-900 leading-tight">{voucher.tour?.location_name || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Tour Date</span> <span className="text-purple-900 font-bold leading-tight">{voucher.tour_date ? format(new Date(voucher.tour_date), 'dd/MM/yyyy') : '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Tour Date</span> <span className="text-purple-900 font-bold leading-tight">{voucher.visit_date ? format(new Date(voucher.visit_date), 'dd/MM/yyyy') : '-'}</span></div>
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Pick-up Time</span> <span className="text-purple-900 font-bold leading-tight">{voucher.pickup_time || '-'}</span></div>
-                  <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Pick-up Hotel</span> <span className="text-purple-900 font-bold leading-tight">{voucher.pickup_hotel?.location_name || '-'}</span></div>
+                  <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Pick-up Hotel</span> <span className="text-purple-900 font-bold leading-tight">{voucher.pickup_location || voucher.pickup_hotel?.location_name || '-'}</span></div>
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Confirmation Number</span> <span className="text-purple-900 font-bold leading-tight">{voucher.conf_no || '-'}</span></div>
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">No. of Person</span> <span className="text-purple-900 font-bold leading-tight">{voucher.person_count || '-'}</span></div>
                   <div className="flex flex-col"><span className="text-[10px] text-gray-400 uppercase font-sans font-bold leading-none mt-1">Payment By</span> <span className="text-purple-900 font-bold leading-tight">{voucher.payment_by || '-'}</span></div>
@@ -291,3 +291,4 @@ export const VoucherHtmlPrint: React.FC = () => {
     </div>
   );
 };
+

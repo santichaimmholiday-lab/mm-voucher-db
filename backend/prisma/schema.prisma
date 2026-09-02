@@ -109,6 +109,7 @@ model tb_voucher {
   entrance_ticket    String?
   tour_id            String?
   pickup_hotel_id    String?
+  pickup_location    String?
   pickup_time        String?
   conf_no            String?
   payment_by         String?
@@ -144,16 +145,16 @@ model tb_user {
 }
 
 model tb_role_permission {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   role        String
   module      String
-  can_read    Boolean  @default(false)
-  can_add     Boolean  @default(false)
-  can_edit    Boolean  @default(false)
-  can_delete  Boolean  @default(false)
-  can_printx  Boolean  @default(false)
-  can_confirm Boolean  @default(false)
-  can_upload  Boolean  @default(false)
+  can_read    Boolean @default(false)
+  can_add     Boolean @default(false)
+  can_edit    Boolean @default(false)
+  can_delete  Boolean @default(false)
+  can_printx  Boolean @default(false)
+  can_confirm Boolean @default(false)
+  can_upload  Boolean @default(false)
 
   @@unique([role, module])
 }
@@ -161,9 +162,9 @@ model tb_role_permission {
 model tb_audit_log {
   id          String   @id @default(uuid())
   user_name   String
-  action      String   // CREATE, UPDATE, DELETE
-  entity_type String   // VOUCHER, CUSTOMER, etc.
+  action      String // CREATE, UPDATE, DELETE
+  entity_type String // VOUCHER, CUSTOMER, etc.
   entity_id   String
-  details     String?  // JSON string of changes or description
+  details     String? // JSON string of changes or description
   created_at  DateTime @default(now())
 }

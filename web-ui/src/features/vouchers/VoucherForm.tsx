@@ -63,8 +63,8 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
         toast.error('Please select a Tour');
         return;
       }
-      if (!formData.pickup_hotel_id) {
-        toast.error('Please select a Pick Up Hotel');
+      if (!formData.pickup_location) {
+        toast.error('Please enter a Pick Up Hotel');
         return;
       }
     }
@@ -80,7 +80,6 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     if (payload.hotel_id === '') delete payload.hotel_id;
     if (payload.attraction_id === '') delete payload.attraction_id;
     if (payload.tour_id === '') delete payload.tour_id;
-    if (payload.pickup_hotel_id === '') delete payload.pickup_hotel_id;
 
     onSubmit(payload as CreateVoucherPayload);
   };
@@ -262,17 +261,22 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
               <label className="block text-sm text-gray-700">Number of Person</label>
               <input type="number" value={formData.person_count || ''} onChange={e => handleChange('person_count', parseInt(e.target.value) || 0)} className="mt-1 w-full p-2 border rounded" />
             </div>
-            <div>
-              <InlineLocationManager
-                label="Pick Up Hotel"
-                typeCode="HOTEL"
-                value={formData.pickup_hotel_id || ''}
-                onChange={val => handleChange('pickup_hotel_id', val)}
-                locations={locations}
-                onLocationsUpdated={fetchLocations}
-                required={true}
-              />
-            </div>
+              <div>
+                <label className="block text-sm text-gray-700">Pick Up Hotel</label>
+                <input 
+                  type="text" 
+                  list="hotel-list"
+                  placeholder="Type or select a hotel..."
+                  value={formData.pickup_location || ''} 
+                  onChange={e => handleChange('pickup_location', e.target.value)} 
+                  className="mt-1 w-full p-2 border rounded bg-white" 
+                />
+                <datalist id="hotel-list">
+                  {hotels.map(loc => (
+                    <option key={loc.id} value={loc.location_name} />
+                  ))}
+                </datalist>
+              </div>
             <div>
               <label className="block text-sm text-gray-700">Pick Up Time</label>
               <input type="text" placeholder="e.g. 07:30 AM" value={formData.pickup_time || ''} onChange={e => handleChange('pickup_time', e.target.value)} className="mt-1 w-full p-2 border rounded" />
@@ -335,3 +339,4 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     </form>
   );
 };
+
