@@ -28,6 +28,7 @@ export interface Voucher {
   nights?: number;
   rooms?: number;
   room_type?: string;
+  breakfast?: string;
 
   attraction_id?: string;
   visit_date?: string;
@@ -52,3 +53,4 @@ export interface Voucher {
 }
 
 export interface CreateVoucherPayload extends Omit<Voucher, 'id' | 'voucher_no' | 'hotel' | 'attraction' | 'tour' | 'pickup_hotel'> {}
+

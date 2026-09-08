@@ -38,7 +38,11 @@ export const generateVoucherHtml = (voucher: any, settings: any, generatedQrCode
         </tr>
         <tr>
           <td class="label">Type of Room :</td><td class="value">${voucher.room_type || '-'}</td>
+          <td class="label">Breakfast :</td><td class="value">${voucher.breakfast || '-'}</td>
+        </tr>
+        <tr>
           <td class="label">Confirmation Number :</td><td class="value">${voucher.conf_no || '-'}</td>
+          <td class="label"></td><td class="value"></td>
         </tr>
         <tr>
           <td class="label">Payment by :</td><td class="value">${voucher.payment_by || '-'}</td>

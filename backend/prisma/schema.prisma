@@ -103,6 +103,7 @@ model tb_voucher {
   nights             Int?
   rooms              Int?
   room_type          String?
+  breakfast          String?
   attraction_id      String?
   visit_date         DateTime?
   person_count       Int?

@@ -223,6 +223,18 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
                 valueKey="name"
               />
             </div>
+            <div>
+              <label className="block text-sm text-gray-700">Breakfast</label>
+              <select
+                value={formData.breakfast || ''}
+                onChange={e => handleChange('breakfast', e.target.value)}
+                className="mt-1 w-full p-2 border rounded bg-white"
+              >
+                <option value="">-- Select --</option>
+                <option value="BREAKFAST">BREAKFAST</option>
+                <option value="NO BREAKFAST">NO BREAKFAST</option>
+              </select>
+            </div>
           </div>
         )}
 

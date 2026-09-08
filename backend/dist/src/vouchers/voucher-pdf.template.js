@@ -39,7 +39,11 @@ const generateVoucherHtml = (voucher, settings, generatedQrCodeBase64) => {
         </tr>
         <tr>
           <td class="label">Type of Room :</td><td class="value">${voucher.room_type || '-'}</td>
+          <td class="label">Breakfast :</td><td class="value">${voucher.breakfast || '-'}</td>
+        </tr>
+        <tr>
           <td class="label">Confirmation Number :</td><td class="value">${voucher.conf_no || '-'}</td>
+          <td class="label"></td><td class="value"></td>
         </tr>
         <tr>
           <td class="label">Payment by :</td><td class="value">${voucher.payment_by || '-'}</td>
@@ -85,7 +89,7 @@ const generateVoucherHtml = (voucher, settings, generatedQrCodeBase64) => {
           <td class="label">Pick Up Time :</td><td class="value">${voucher.pickup_time || '-'}</td>
         </tr>
         <tr>
-          <td class="label">Hotel Name (Pickup):</td><td class="value">${voucher.pickup_hotel?.location_name || '-'}</td>
+          <td class="label">Hotel Name (Pickup):</td><td class="value">${(voucher.pickup_location || voucher.pickup_hotel?.location_name) || '-'}</td>
           <td class="label">Confirmation Number :</td><td class="value">${voucher.conf_no || '-'}</td>
         </tr>
         <tr>
