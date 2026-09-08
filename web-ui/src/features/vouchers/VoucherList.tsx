@@ -34,6 +34,36 @@ export const VoucherList: React.FC = () => {
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+  
+  const [activeQuickFilter, setActiveQuickFilter] = useState('ALL');
+
+  const handleQuickFilter = (filter: string) => {
+    setActiveQuickFilter(filter);
+    setIsAdvancedSearchOpen(false);
+    
+    if (filter === 'ALL') {
+      setAdvancedFilters([]);
+    } else if (filter === 'WAITING') {
+      setAdvancedFilters([{ field: 'voucher_status', operator: 'equals', value: 'Waiting' }]);
+    } else if (filter === 'CONFIRMED') {
+      setAdvancedFilters([{ field: 'voucher_status', operator: 'equals', value: 'Confirmed' }]);
+    } else if (filter === 'TODAY_TOUR') {
+      const d = new Date();
+      const start = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString();
+      const end = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999).toISOString();
+      setAdvancedFilters([{ field: 'visit_date', operator: 'between', value: start, valueTo: end }]);
+    } else if (filter === 'THIS_WEEK_CHECKIN') {
+      const d = new Date();
+      const day = d.getDay();
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+      const startD = new Date(d.setDate(diff));
+      startD.setHours(0,0,0,0);
+      const endD = new Date(startD);
+      endD.setDate(endD.getDate() + 6);
+      endD.setHours(23,59,59,999);
+      setAdvancedFilters([{ field: 'check_in_date', operator: 'between', value: startD.toISOString(), valueTo: endD.toISOString() }]);
+    }
+  };
 
   const { canAdd, canEdit, canDelete, canPrint } = usePermissions();
 
@@ -170,6 +200,38 @@ export const VoucherList: React.FC = () => {
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="px-4 pt-3 border-b border-gray-200 flex space-x-2 overflow-x-auto bg-gray-50 rounded-t-lg">
+            <button 
+              onClick={() => handleQuickFilter('ALL')}
+              className={`px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap ${activeQuickFilter === 'ALL' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            >
+              ทั้งหมด (All)
+            </button>
+            <button 
+              onClick={() => handleQuickFilter('WAITING')}
+              className={`px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap ${activeQuickFilter === 'WAITING' ? 'border-yellow-500 text-yellow-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            >
+              รอคอนเฟิร์ม (Waiting)
+            </button>
+            <button 
+              onClick={() => handleQuickFilter('CONFIRMED')}
+              className={`px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap ${activeQuickFilter === 'CONFIRMED' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            >
+              คอนเฟิร์มแล้ว (Confirmed)
+            </button>
+            <button 
+              onClick={() => handleQuickFilter('TODAY_TOUR')}
+              className={`px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap ${activeQuickFilter === 'TODAY_TOUR' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            >
+              ทัวร์วันนี้ (Today's Tour)
+            </button>
+            <button 
+              onClick={() => handleQuickFilter('THIS_WEEK_CHECKIN')}
+              className={`px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap ${activeQuickFilter === 'THIS_WEEK_CHECKIN' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            >
+              เช็คอินสัปดาห์นี้ (Check-in This Week)
+            </button>
+          </div>
           <div className="p-4 border-b border-gray-200">
             <input 
               type="text" 
@@ -182,7 +244,7 @@ export const VoucherList: React.FC = () => {
             <AdvancedSearch 
               fields={VOUCHER_FIELDS}
               filters={advancedFilters}
-              onChange={setAdvancedFilters}
+              onChange={(f) => { setAdvancedFilters(f); setActiveQuickFilter('CUSTOM'); }}
               isOpen={isAdvancedSearchOpen}
               onToggle={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
             />
@@ -322,3 +384,4 @@ export const VoucherList: React.FC = () => {
     </div>
   );
 };
+
