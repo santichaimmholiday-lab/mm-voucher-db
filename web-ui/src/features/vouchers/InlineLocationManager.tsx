@@ -123,7 +123,7 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
               value: valueKey === 'name' ? h.location_name : h.id,
               label: h.location_name
             }))}
-            value={value ? { value: value, label: valueKey === 'name' ? value : (filteredLocations.find(l => l.id === value)?.location_name || value) } : null}
+            value={value ? { value: value, label: valueKey === 'name' ? value : (filteredLocations.find(l => l.id === value)?.location_name || locations.find(l => l.id === value)?.location_name || value) } : null}
             onChange={(newValue: any) => onChange(newValue ? newValue.value : '')}
             placeholder={`Search or type ${label}...`}
             formatCreateLabel={(inputValue) => `Use custom: "${inputValue}"`}
@@ -204,4 +204,5 @@ export const InlineLocationManager: React.FC<Props> = ({ label, typeCode, value,
     </div>
   );
 };
+
 
