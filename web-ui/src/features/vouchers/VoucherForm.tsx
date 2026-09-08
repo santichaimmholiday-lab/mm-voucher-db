@@ -37,6 +37,20 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     fetchLocations();
   }, []);
 
+  useEffect(() => {
+    if (formData.check_in_date && formData.check_out_date) {
+      const checkIn = new Date(formData.check_in_date);
+      const checkOut = new Date(formData.check_out_date);
+      if (!isNaN(checkIn.getTime()) && !isNaN(checkOut.getTime())) {
+        const diffTime = checkOut.getTime() - checkIn.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && formData.nights !== diffDays) {
+          setFormData(prev => ({ ...prev, nights: diffDays }));
+        }
+      }
+    }
+  }, [formData.check_in_date, formData.check_out_date]);
+
   const handleChange = (field: keyof CreateVoucherPayload, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -335,5 +349,6 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     </form>
   );
 };
+
 
 
