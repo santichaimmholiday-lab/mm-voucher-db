@@ -145,12 +145,12 @@ export const generateVoucherHtml = (voucher: any, settings: any, generatedQrCode
           <strong>${settings.condition_booking || 'CONDITION OF BOOKING: NON-REFUNDABLE'}</strong><br/>
           
           ${voucher.voucher_type === 'HOTEL' && settings.condition_hotel ? `
-            <br/><strong>*Hotel Remarks*</strong><br/>
+            <strong>*Hotel Remarks*</strong><br/>
             ${settings.condition_hotel.replace(/\n/g, '<br/>')}
           ` : ''}
 
           ${voucher.voucher_type === 'SHARING TOUR' && settings.condition_tour ? `
-            <br/><strong>*Important Note*: Sharing Tour:</strong><br/>
+            <strong>*Important Note*: Sharing Tour:</strong><br/>
             ${settings.condition_tour.replace(/\n/g, '<br/>')}
           ` : ''}
         </div>
@@ -210,8 +210,8 @@ export const generateVoucherHtml = (voucher: any, settings: any, generatedQrCode
         .detail-table .value { width: 28%; }
 
         /* Conditions Section */
-        .conditions-section { font-size: 9px; line-height: 1.2; margin-bottom: 10px; }
-        .conditions-section strong { font-size: 10px; color: #000; }
+        .conditions-section { font-size: 7.5px; line-height: 1.1; margin-bottom: 5px; }
+        .conditions-section strong { font-size: 8px; color: #000; }
         
         /* Footer */
         .footer-wishes { text-align: center; font-weight: bold; font-size: 12px; margin-top: 10px; }
@@ -228,4 +228,5 @@ export const generateVoucherHtml = (voucher: any, settings: any, generatedQrCode
     </html>
   `;
 };
+
 
