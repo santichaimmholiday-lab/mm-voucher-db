@@ -206,8 +206,8 @@ export const generateVoucherHtml = (voucher: any, settings: any, generatedQrCode
         
         .detail-table { width: 100%; font-size: 11px; border-collapse: collapse; }
         .detail-table td { padding: 4px 0; vertical-align: top; }
-        .detail-table .label { width: 18%; font-weight: 600; color: #444; }
-        .detail-table .value { width: 32%; }
+        .detail-table .label { width: 22%; font-weight: 600; color: #444; }
+        .detail-table .value { width: 28%; }
 
         /* Conditions Section */
         .conditions-section { font-size: 9px; line-height: 1.2; margin-bottom: 10px; }
