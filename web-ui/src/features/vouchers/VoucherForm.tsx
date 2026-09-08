@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CreateVoucherPayload, MasterLocation } from './types';
 import { InlineLocationManager } from './InlineLocationManager';
 import toast from 'react-hot-toast';
+import { usePermissions } from '../../hooks/usePermissions';
 
 interface Props {
   isLoading: boolean;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit, onCancel }) => {
+  const { canPrint } = usePermissions();
   const [locations, setLocations] = useState<MasterLocation[]>([]);
   
   const [formData, setFormData] = useState<Partial<CreateVoucherPayload>>(initialData || {
@@ -352,11 +354,39 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
         </div>
       )}
 
-      <div className="flex justify-end space-x-2 pt-4">
-        <button type="button" onClick={onCancel} className="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
-        <button type="submit" disabled={isLoading} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50">
-          {isLoading ? 'Saving...' : (initialData ? 'Update Voucher' : 'Create Voucher')}
-        </button>
+      <div className="flex justify-between items-center pt-4 mt-6 border-t">
+        <div className="flex space-x-2">
+          {initialData?.id && canPrint && (
+            <>
+              <button
+                type="button"
+                onClick={() => window.open(`/vouchers/${initialData.id}/print`, '_blank')}
+                className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 border border-blue-200 rounded hover:bg-blue-100 transition-colors font-medium"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Print HTML
+              </button>
+              <button
+                type="button"
+                onClick={() => window.open(`/api/vouchers/${initialData.id}/pdf`, '_blank')}
+                className="inline-flex items-center px-4 py-2 bg-green-50 text-green-600 border border-green-200 rounded hover:bg-green-100 transition-colors font-medium"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                Print PDF
+              </button>
+            </>
+          )}
+        </div>
+        <div className="flex space-x-2">
+          <button type="button" onClick={onCancel} className="px-4 py-2 border rounded hover:bg-gray-100 font-medium text-gray-700">Cancel</button>
+          <button type="submit" disabled={isLoading} className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium">
+            {isLoading ? 'Saving...' : (initialData ? 'Update Voucher' : 'Create Voucher')}
+          </button>
+        </div>
       </div>
     </form>
   );
