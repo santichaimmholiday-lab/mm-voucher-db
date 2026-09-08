@@ -44,14 +44,14 @@ export const VoucherList: React.FC = () => {
     if (filter === 'ALL') {
       setAdvancedFilters([]);
     } else if (filter === 'WAITING') {
-      setAdvancedFilters([{ field: 'voucher_status', operator: 'equals', value: 'Waiting' }]);
+      setAdvancedFilters([{ id: Math.random().toString(), field: 'voucher_status', operator: 'equals', value: 'Waiting' }]);
     } else if (filter === 'CONFIRMED') {
-      setAdvancedFilters([{ field: 'voucher_status', operator: 'equals', value: 'Confirmed' }]);
+      setAdvancedFilters([{ id: Math.random().toString(), field: 'voucher_status', operator: 'equals', value: 'Confirmed' }]);
     } else if (filter === 'TODAY_TOUR') {
       const d = new Date();
       const start = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString();
       const end = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999).toISOString();
-      setAdvancedFilters([{ field: 'visit_date', operator: 'between', value: start, valueTo: end }]);
+      setAdvancedFilters([{ id: Math.random().toString(), field: 'visit_date', operator: 'between', value: start, valueTo: end }]);
     } else if (filter === 'THIS_WEEK_CHECKIN') {
       const d = new Date();
       const day = d.getDay();
@@ -61,7 +61,7 @@ export const VoucherList: React.FC = () => {
       const endD = new Date(startD);
       endD.setDate(endD.getDate() + 6);
       endD.setHours(23,59,59,999);
-      setAdvancedFilters([{ field: 'check_in_date', operator: 'between', value: startD.toISOString(), valueTo: endD.toISOString() }]);
+      setAdvancedFilters([{ id: Math.random().toString(), field: 'check_in_date', operator: 'between', value: startD.toISOString(), valueTo: endD.toISOString() }]);
     }
   };
 
