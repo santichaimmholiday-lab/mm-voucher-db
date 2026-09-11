@@ -17,7 +17,7 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
   
   const [formData, setFormData] = useState<Partial<CreateVoucherPayload>>(initialData || {
     voucher_issue_date: new Date().toISOString().substring(0, 10),
-    voucher_status: 'Waiting',
+    voucher_status: 'Confirmed',
     voucher_type: 'HOTEL',
     voucher_guest_name: '',
     voucher_company: '',
@@ -112,14 +112,14 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
         <div>
           <h4 className="font-bold text-gray-800">Voucher Status</h4>
           <p className="text-xs text-gray-500 mt-1">
-            <strong>Waiting:</strong> Default when created.<br/>
-            <strong>Confirmed:</strong> Ready for guest (e.g., Hotel confirmed).<br/>
+            <strong>Waiting:</strong> Pending hotel/tour response.<br/>
+            <strong>Confirmed:</strong> Default when created. Ready for guest.<br/>
             <strong>Cancelled:</strong> Voided/Refunded.
           </p>
         </div>
         <div className="w-48">
           <select
-            value={formData.voucher_status || 'Waiting'}
+            value={formData.voucher_status || 'Confirmed'}
             onChange={e => handleChange('voucher_status', e.target.value)}
             className={`w-full p-2 border rounded font-bold ${
               formData.voucher_status === 'Confirmed' ? 'bg-green-50 text-green-700 border-green-300' :
@@ -391,6 +391,7 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     </form>
   );
 };
+
 
 
 
