@@ -443,4 +443,5 @@ export declare class VouchersController {
         conf_by: string | null;
     }>;
     generatePdf(id: string, res: Response): Promise<void>;
+    generateMobile(id: string, res: Response): Promise<void>;
 }

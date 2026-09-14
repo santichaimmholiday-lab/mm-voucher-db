@@ -19,7 +19,7 @@ let JwtAuthGuard = class JwtAuthGuard {
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
-        if (request.url.includes('/api/auth/login') || request.url.includes('/pdf') || request.url.includes('/api/health')) {
+        if (request.url.includes('/api/auth/login') || request.url.includes('/pdf') || request.url.includes('/mobile') || request.url.includes('/api/health')) {
             return true;
         }
         const authHeader = request.headers.authorization;

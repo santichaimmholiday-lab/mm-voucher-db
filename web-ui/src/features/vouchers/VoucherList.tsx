@@ -24,6 +24,7 @@ export const VoucherList: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<any>(null);
   const [viewHistoryVoucherId, setViewHistoryVoucherId] = useState<string | null>(null);
+  const [openActionId, setOpenActionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -249,7 +250,7 @@ export const VoucherList: React.FC = () => {
               onToggle={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
             />
           </div>
-          <div className="relative overflow-x-auto">
+          <div className="relative overflow-x-auto min-h-[350px]">
             {loading && (
                <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
                  <span className="text-gray-500 font-medium">Loading...</span>
@@ -290,67 +291,91 @@ export const VoucherList: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
+                      <div className="relative inline-block text-left">
                         <button 
-                          onClick={() => setViewHistoryVoucherId(v.id)} 
-                          className="inline-flex items-center justify-center px-3 py-1.5 bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors"
-                          title="View History"
+                          onClick={() => setOpenActionId(openActionId === v.id ? null : v.id)}
+                          className="inline-flex items-center justify-center px-3 py-1.5 bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md transition-colors shadow-sm"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          Actions
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
-                          History
                         </button>
-                        {canPrint && (
+
+                        {openActionId === v.id && (
                           <>
-                            <button 
-                              onClick={() => window.open(`/vouchers/${v.id}/print`, '_blank')} 
-                              className="inline-flex items-center justify-center px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 border border-blue-200 rounded-md transition-colors"
-                              title="Print HTML (A4)"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                              Print HTML
-                            </button>
-                            <button 
-                              onClick={() => handlePrint(v.id)} 
-                              className="inline-flex items-center justify-center px-3 py-1.5 bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 border border-green-200 rounded-md transition-colors"
-                              title="Print PDF"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                              </svg>
-                              Print PDF
-                            </button>
+                            <div className="fixed inset-0 z-40" onClick={() => setOpenActionId(null)}></div>
+                            <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-xl border border-gray-200 z-50 text-left overflow-hidden origin-top-right">
+                              <div className="py-1">
+                                <button 
+                                  onClick={() => { setViewHistoryVoucherId(v.id); setOpenActionId(null); }} 
+                                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                                >
+                                  <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  History
+                                </button>
+                                {canPrint && (
+                                  <>
+                                    <button 
+                                      onClick={() => { window.open(`${window.location.origin}/api/vouchers/${v.id}/mobile`, '_blank'); setOpenActionId(null); }} 
+                                      className="w-full text-left px-4 py-2 text-sm text-purple-700 hover:bg-purple-50 flex items-center"
+                                    >
+                                      <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                      </svg>
+                                      Print Mobile (Public)
+                                    </button>
+                                    <button 
+                                      onClick={() => { window.open(`/vouchers/${v.id}/print`, '_blank'); setOpenActionId(null); }} 
+                                      className="w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 flex items-center"
+                                    >
+                                      <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                      </svg>
+                                      Print HTML (A4)
+                                    </button>
+                                    <button 
+                                      onClick={() => { handlePrint(v.id); setOpenActionId(null); }} 
+                                      className="w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-50 flex items-center"
+                                    >
+                                      <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                      </svg>
+                                      Print PDF
+                                    </button>
+                                  </>
+                                )}
+                                {canEdit && (
+                                  <button 
+                                    onClick={() => {
+                                      setEditingVoucher(v);
+                                      setShowForm(true);
+                                      setOpenActionId(null);
+                                    }}
+                                    className="w-full text-left px-4 py-2 text-sm text-amber-700 hover:bg-amber-50 flex items-center"
+                                  >
+                                    <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    Edit
+                                  </button>
+                                )}
+                                {canDelete && (
+                                  <button 
+                                    onClick={() => { handleDelete(v.id); setOpenActionId(null); }} 
+                                    className="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 flex items-center"
+                                  >
+                                    <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Delete
+                                  </button>
+                                )}
+                              </div>
+                            </div>
                           </>
-                        )}
-                        {canEdit && (
-                          <button 
-                            onClick={() => {
-                              setEditingVoucher(v);
-                              setShowForm(true);
-                            }}
-                            className="inline-flex items-center justify-center px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700 border border-amber-200 rounded-md transition-colors" 
-                            title="Edit"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit
-                          </button>
-                        )}
-                        {canDelete && (
-                          <button 
-                            onClick={() => handleDelete(v.id)} 
-                            className="inline-flex items-center justify-center px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border border-red-200 rounded-md transition-colors"
-                            title="Delete"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Delete
-                          </button>
                         )}
                       </div>
                     </td>
@@ -384,4 +409,5 @@ export const VoucherList: React.FC = () => {
     </div>
   );
 };
+
 

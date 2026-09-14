@@ -445,4 +445,5 @@ export declare class VouchersService {
         conf_by: string | null;
     }>;
     generatePdf(id: string): Promise<Buffer>;
+    generateMobile(id: string): Promise<string>;
 }

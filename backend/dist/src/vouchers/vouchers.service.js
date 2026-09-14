@@ -275,6 +275,16 @@ let VouchersService = class VouchersService {
         const file = { content: htmlContent };
         return await html_pdf_node_1.default.generatePdf(file, options);
     }
+    async generateMobile(id) {
+        const voucher = await this.findOne(id);
+        const settings = await this.prisma.tb_system_settings.findFirst() || {};
+        const baseUrl = process.env.FRONTEND_URL || 'https://mm-voucher-delta.vercel.app';
+        const publicUrl = `${baseUrl}/api/vouchers/${id}/mobile`;
+        const qrCodeBase64 = await QRCode.toDataURL(publicUrl, { margin: 1 });
+        const { generateMobileVoucherHtml } = require('./voucher-mobile.template');
+        const htmlContent = generateMobileVoucherHtml(voucher, settings, qrCodeBase64);
+        return htmlContent;
+    }
 };
 exports.VouchersService = VouchersService;
 exports.VouchersService = VouchersService = __decorate([

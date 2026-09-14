@@ -61,4 +61,13 @@ export class VouchersController {
     });
     res.end(pdfBuffer);
   }
+
+  @Get(':id/mobile')
+  async generateMobile(@Param('id') id: string, @Res() res: Response) {
+    const htmlString = await this.vouchersService.generateMobile(id);
+    res.set({
+      'Content-Type': 'text/html; charset=utf-8',
+    });
+    res.end(htmlString);
+  }
 }

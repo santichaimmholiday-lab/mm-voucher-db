@@ -55,6 +55,13 @@ let VouchersController = class VouchersController {
         });
         res.end(pdfBuffer);
     }
+    async generateMobile(id, res) {
+        const htmlString = await this.vouchersService.generateMobile(id);
+        res.set({
+            'Content-Type': 'text/html; charset=utf-8',
+        });
+        res.end(htmlString);
+    }
 };
 exports.VouchersController = VouchersController;
 __decorate([
@@ -120,6 +127,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], VouchersController.prototype, "generatePdf", null);
+__decorate([
+    (0, common_1.Get)(':id/mobile'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], VouchersController.prototype, "generateMobile", null);
 exports.VouchersController = VouchersController = __decorate([
     (0, common_1.Controller)('api/vouchers'),
     __metadata("design:paramtypes", [vouchers_service_1.VouchersService])

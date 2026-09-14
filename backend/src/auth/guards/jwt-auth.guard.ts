@@ -8,8 +8,8 @@ export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     
-    // Bypass authentication for login route, PDF generation, and Health check
-    if (request.url.includes('/api/auth/login') || request.url.includes('/pdf') || request.url.includes('/api/health')) {
+    // Bypass authentication for login, PDF, Mobile HTML, and Health check
+    if (request.url.includes('/api/auth/login') || request.url.includes('/pdf') || request.url.includes('/mobile') || request.url.includes('/api/health')) {
       return true;
     }
 
