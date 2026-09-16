@@ -102,7 +102,11 @@ export declare class VouchersController {
             conf_by: string | null;
         })[];
     }>;
+    getNextNumber(date?: string): Promise<{
+        voucher_no: string;
+    }>;
     create(createDto: any, req: any): Promise<{
+        _numberChanged: boolean;
         id: string;
         is_deleted: boolean;
         created_by: string | null;

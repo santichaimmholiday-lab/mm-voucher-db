@@ -11,6 +11,11 @@ export class VouchersController {
     return this.vouchersService.getDashboardStats();
   }
 
+  @Get('next-number')
+  getNextNumber(@Query('date') date?: string) {
+    return this.vouchersService.getNextNumberPreview(date);
+  }
+
   @Post()
   create(@Body() createDto: any, @Req() req: any) {
     const username = req.user?.email ? req.user.email.split('@')[0] : 'System';

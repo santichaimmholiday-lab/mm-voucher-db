@@ -187,7 +187,15 @@ export const VoucherList: React.FC = () => {
                   const errData = await res.json().catch(() => ({}));
                   throw new Error(errData.message || 'Operation failed');
                 }
-                toast.success(editingVoucher ? 'Voucher updated successfully!' : 'Voucher created successfully!');
+                
+                const responseData = await res.json().catch(() => ({}));
+                
+                if (responseData._numberChanged) {
+                  toast.success(`Created successfully! (Number changed to ${responseData.voucher_no} to avoid duplicate)`, { duration: 5000 });
+                } else {
+                  toast.success(editingVoucher ? 'Voucher updated successfully!' : 'Voucher created successfully!');
+                }
+                
                 setShowForm(false);
                 setEditingVoucher(null);
                 fetchVouchers();

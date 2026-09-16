@@ -86,6 +86,11 @@ let VouchersService = class VouchersService {
             recentVouchers
         };
     }
+    async getNextNumberPreview(date) {
+        const issueDate = date || new Date().toISOString();
+        const nextNo = await this.generateVoucherNumber(issueDate);
+        return { voucher_no: nextNo };
+    }
     async generateVoucherNumber(issueDate) {
         const year = issueDate.substring(2, 4);
         const month = issueDate.substring(5, 7);
@@ -107,14 +112,25 @@ let VouchersService = class VouchersService {
         const companyInfo = await this.prisma.tb_customer.findFirst({
             where: { cus_name: voucherData.voucher_company || '', is_deleted: false }
         });
-        const voucher_no = await this.generateVoucherNumber(voucherData.voucher_issue_date);
+        let voucher_no = voucherData.voucher_no;
+        let numberChanged = false;
+        if (voucher_no) {
+            const existing = await this.prisma.tb_voucher.findFirst({ where: { voucher_no } });
+            if (existing) {
+                voucher_no = await this.generateVoucherNumber(voucherData.voucher_issue_date);
+                numberChanged = true;
+            }
+        }
+        else {
+            voucher_no = await this.generateVoucherNumber(voucherData.voucher_issue_date);
+        }
         try {
             return await this.prisma.$transaction(async (tx) => {
                 const voucher = await tx.tb_voucher.create({
                     data: {
                         ...voucherData,
                         voucher_no,
-                        voucher_status: 'Waiting',
+                        voucher_status: voucherData.voucher_status || 'Confirmed',
                         created_by: userId,
                     }
                 });
@@ -123,7 +139,7 @@ let VouchersService = class VouchersService {
                     voucher_type: voucher.voucher_type,
                     guest_name: voucher.voucher_guest_name
                 });
-                return voucher;
+                return { ...voucher, _numberChanged: numberChanged };
             });
         }
         catch (error) {

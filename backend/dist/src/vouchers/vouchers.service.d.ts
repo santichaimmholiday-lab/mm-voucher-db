@@ -103,8 +103,12 @@ export declare class VouchersService {
             conf_by: string | null;
         })[];
     }>;
+    getNextNumberPreview(date?: string): Promise<{
+        voucher_no: string;
+    }>;
     private generateVoucherNumber;
     create(createDto: any, userId: string): Promise<{
+        _numberChanged: boolean;
         id: string;
         is_deleted: boolean;
         created_by: string | null;

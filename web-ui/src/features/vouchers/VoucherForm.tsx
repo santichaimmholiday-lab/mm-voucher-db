@@ -39,6 +39,21 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     fetchLocations();
   }, []);
 
+  // Fetch next voucher number preview for new vouchers
+  useEffect(() => {
+    if (!initialData && formData.voucher_issue_date) {
+      const dateString = formData.voucher_issue_date.substring(0, 10);
+      fetch(`/api/vouchers/next-number?date=${dateString}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.voucher_no) {
+            setFormData(prev => ({ ...prev, voucher_no: data.voucher_no }));
+          }
+        })
+        .catch(err => console.error('Failed to get next voucher number preview', err));
+    }
+  }, [formData.voucher_issue_date, initialData]);
+
   useEffect(() => {
     if (formData.check_in_date && formData.check_out_date) {
       const checkIn = new Date(formData.check_in_date);
@@ -69,20 +84,19 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
       return;
     }
 
-    if (formData.voucher_type === 'LOCAL ATTRACTION' && !formData.attraction_id) {
-      toast.error('Please select an Attraction');
+    if ((formData.voucher_type === 'LOCAL ATTRACTION' || formData.voucher_type === 'SHARING TOUR') && !formData.visit_date) {
+      toast.error('Visit Date is required');
       return;
     }
 
-    if (formData.voucher_type === 'SHARING TOUR') {
-      if (!formData.tour_id) {
-        toast.error('Please select a Tour');
-        return;
-      }
-      if (!formData.pickup_location) {
-        toast.error('Please enter a Pick Up Hotel');
-        return;
-      }
+    if (formData.voucher_type === 'SHARING TOUR' && !formData.tour_id) {
+      toast.error('Please select a Tour');
+      return;
+    }
+
+    if (formData.voucher_type === 'LOCAL ATTRACTION' && !formData.attraction_id) {
+      toast.error('Please select an Attraction');
+      return;
     }
     
     // Convert to strict dates where needed before submit
@@ -93,9 +107,10 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     if (payload.visit_date) payload.visit_date = new Date(payload.visit_date).toISOString();
 
     // Clean up empty relational fields to undefined so Prisma ignores them or sets to null
-    if (payload.hotel_id === '') delete payload.hotel_id;
-    if (payload.attraction_id === '') delete payload.attraction_id;
-    if (payload.tour_id === '') delete payload.tour_id;
+    if (!payload.hotel_id) delete payload.hotel_id;
+    if (!payload.attraction_id) delete payload.attraction_id;
+    if (!payload.tour_id) delete payload.tour_id;
+    if (!payload.pickup_hotel_id) delete payload.pickup_hotel_id;
 
     onSubmit(payload as CreateVoucherPayload);
   };
@@ -108,29 +123,38 @@ export const VoucherForm: React.FC<Props> = ({ isLoading, initialData, onSubmit,
     <form onSubmit={handleSubmit} className="space-y-6">
       
       {/* 0. Document Status */}
-      <div className="bg-white p-4 rounded border border-gray-200 shadow-sm flex items-center justify-between">
-        <div>
-          <h4 className="font-bold text-gray-800">Voucher Status</h4>
+      <div className="bg-white p-4 rounded border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex-1">
+          <h4 className="font-bold text-gray-800">Voucher Details</h4>
           <p className="text-xs text-gray-500 mt-1">
             <strong>Waiting:</strong> Pending hotel/tour response.<br/>
             <strong>Confirmed:</strong> Default when created. Ready for guest.<br/>
             <strong>Cancelled:</strong> Voided/Refunded.
           </p>
         </div>
-        <div className="w-48">
-          <select
-            value={formData.voucher_status || 'Confirmed'}
-            onChange={e => handleChange('voucher_status', e.target.value)}
-            className={`w-full p-2 border rounded font-bold ${
-              formData.voucher_status === 'Confirmed' ? 'bg-green-50 text-green-700 border-green-300' :
-              formData.voucher_status === 'Cancelled' ? 'bg-red-50 text-red-700 border-red-300' :
-              'bg-yellow-50 text-yellow-700 border-yellow-300'
-            }`}
-          >
-            <option value="Waiting">Waiting</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
+        <div className="flex gap-4 items-center">
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Voucher No.</label>
+            <input 
+              type="text" 
+              value={formData.voucher_no || ''} 
+              onChange={e => handleChange('voucher_no', e.target.value)}
+              placeholder="Auto-generated"
+              className="w-36 p-2 text-sm border rounded font-bold text-blue-700 bg-blue-50 focus:bg-white outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Status</label>
+            <select
+              value={formData.voucher_status || 'Confirmed'}
+              onChange={e => handleChange('voucher_status', e.target.value)}
+              className="w-36 p-2 text-sm border rounded font-medium text-green-700 bg-green-50 outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="Waiting">Waiting</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
         </div>
       </div>
 

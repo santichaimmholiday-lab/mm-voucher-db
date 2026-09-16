@@ -23,6 +23,9 @@ let VouchersController = class VouchersController {
     getDashboardStats() {
         return this.vouchersService.getDashboardStats();
     }
+    getNextNumber(date) {
+        return this.vouchersService.getNextNumberPreview(date);
+    }
     create(createDto, req) {
         const username = req.user?.email ? req.user.email.split('@')[0] : 'System';
         return this.vouchersService.create(createDto, username);
@@ -70,6 +73,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], VouchersController.prototype, "getDashboardStats", null);
+__decorate([
+    (0, common_1.Get)('next-number'),
+    __param(0, (0, common_1.Query)('date')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], VouchersController.prototype, "getNextNumber", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

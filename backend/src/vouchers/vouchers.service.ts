@@ -42,6 +42,12 @@ export class VouchersService {
     };
   }
 
+  async getNextNumberPreview(date?: string) {
+    const issueDate = date || new Date().toISOString();
+    const nextNo = await this.generateVoucherNumber(issueDate);
+    return { voucher_no: nextNo };
+  }
+
   private async generateVoucherNumber(issueDate: string): Promise<string> {
     const year = issueDate.substring(2, 4); // "YY"
     const month = issueDate.substring(5, 7); // "MM"
@@ -69,7 +75,18 @@ export class VouchersService {
       where: { cus_name: voucherData.voucher_company || '', is_deleted: false }
     });
 
-    const voucher_no = await this.generateVoucherNumber(voucherData.voucher_issue_date);
+    let voucher_no = voucherData.voucher_no;
+    let numberChanged = false;
+
+    if (voucher_no) {
+      const existing = await this.prisma.tb_voucher.findFirst({ where: { voucher_no } });
+      if (existing) {
+        voucher_no = await this.generateVoucherNumber(voucherData.voucher_issue_date);
+        numberChanged = true;
+      }
+    } else {
+      voucher_no = await this.generateVoucherNumber(voucherData.voucher_issue_date);
+    }
 
     try {
         return await this.prisma.$transaction(async (tx) => {
@@ -77,7 +94,7 @@ export class VouchersService {
             data: {
               ...voucherData,
               voucher_no,
-              voucher_status: 'Waiting',
+              voucher_status: voucherData.voucher_status || 'Confirmed',
               created_by: userId,
             }
           });
@@ -88,7 +105,7 @@ export class VouchersService {
             guest_name: voucher.voucher_guest_name
           });
 
-          return voucher;
+          return { ...voucher, _numberChanged: numberChanged };
         });
     } catch (error) {
       console.error('Prisma Transaction Error:', error);
