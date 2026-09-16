@@ -52,5 +52,7 @@ export interface Voucher {
   pickup_hotel?: { location_name: string };
 }
 
-export interface CreateVoucherPayload extends Omit<Voucher, 'id' | 'voucher_no' | 'hotel' | 'attraction' | 'tour' | 'pickup_hotel'> {}
+export interface CreateVoucherPayload extends Omit<Voucher, 'id' | 'voucher_no' | 'hotel' | 'attraction' | 'tour' | 'pickup_hotel'> {
+  voucher_no?: string;
+}
 
