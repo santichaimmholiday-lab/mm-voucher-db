@@ -28,7 +28,11 @@ export const LoginPage: React.FC = () => {
         body: JSON.stringify(data)
       });
       if (!res.ok) {
-        throw new Error('Invalid username or password');
+        if (res.status === 401 || res.status === 400) {
+          throw new Error('Invalid username or password');
+        } else {
+          throw new Error(`Server Error (${res.status}): The backend service might be down.`);
+        }
       }
       const responseData = await res.json();
       localStorage.setItem('token', responseData.access_token);
