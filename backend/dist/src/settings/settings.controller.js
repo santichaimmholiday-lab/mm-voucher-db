@@ -25,7 +25,9 @@ let SettingsController = class SettingsController {
     constructor(settingsService, backupService) {
         this.settingsService = settingsService;
         this.backupService = backupService;
-        this.supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL || '', process.env.SUPABASE_KEY || '');
+        const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+        const supabaseKey = process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || 'placeholder_key';
+        this.supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
     }
     getSettings() {
         return this.settingsService.getSettings();

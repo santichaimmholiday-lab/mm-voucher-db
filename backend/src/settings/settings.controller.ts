@@ -17,10 +17,9 @@ export class SettingsController {
     private readonly backupService: BackupService
   ) {
     // Initialize Supabase client
-    this.supabase = createClient(
-      process.env.SUPABASE_URL || '',
-      process.env.SUPABASE_KEY || ''
-    );
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+    const supabaseKey = process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || 'placeholder_key';
+    this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
   @Get()
