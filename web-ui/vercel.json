@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://mm-voucher.onrender.com/api/:path*"
+      "destination": "https://mm-voucher-db.onrender.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://mm-voucher.onrender.com/uploads/:path*"
+      "destination": "https://mm-voucher-db.onrender.com/uploads/:path*"
     },
     {
       "source": "/(.*)",
